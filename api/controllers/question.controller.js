@@ -189,6 +189,34 @@ const searchQuestions = async (req, res) => {
   }
 };
 
+const getQuestions = async (req, res) => {
+  try {
+    const start = parseInt(req.query.start, 10) || 0;
+    const end = parseInt(req.query.end, 10) || 10;
+    const limit = end - start;
+
+    const questions = await Question.find()
+      .sort({ timestamp: -1 }) // Sort by timestamp in descending order
+      .skip(start)
+      .limit(limit);
+
+    res.status(200).json(questions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getNumberOfTotalQuestions = async (req, res) => {
+  try {
+    const count = await Question.estimatedDocumentCount(); // or use Question.countDocuments() if you prefer
+    res.status(200).json(count);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   createQuestion,
   updateQuestionsText,
@@ -197,4 +225,6 @@ module.exports = {
   searchQuestions,
   readQuestion,
   searchQuestionsByTopic,
+  getQuestions,
+  getNumberOfTotalQuestions,
 };

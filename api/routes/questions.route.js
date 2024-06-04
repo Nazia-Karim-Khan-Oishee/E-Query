@@ -8,6 +8,8 @@ const {
   readQuestion,
   searchQuestionsByTopic,
   searchQuestions,
+  getQuestions,
+  getNumberOfTotalQuestions,
 } = require("../controllers/question.controller");
 
 const ensureAuthenticated = require("../middleware/auth.middleware");
@@ -27,4 +29,12 @@ router.get(
   ensureAuthenticated,
   searchQuestions
 );
+
+router.get("/getQuestions", ensureAuthenticated, getQuestions);
+router.get(
+  "/getNumberOfTotalQuestions",
+  ensureAuthenticated,
+  getNumberOfTotalQuestions
+);
+
 module.exports = router;
