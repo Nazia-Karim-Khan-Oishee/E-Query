@@ -7,7 +7,7 @@ const {
   deleteVote,
 } = require("../controllers/vote.controller");
 
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.post("/postVote/Question", postVote);
 router.post("/postVote/Comment", postVotetoComment);
