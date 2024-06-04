@@ -14,7 +14,7 @@ const {
 } = require("../controllers/profile.controller");
 
 const { uploadProfileImage } = require("../middleware/image.middleware");
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.patch("/users/updatepassword", ensureAuthenticated, updatePasssword);
 router.patch("/users/updateUsername", ensureAuthenticated, updateUserName);

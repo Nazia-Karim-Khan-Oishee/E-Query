@@ -3,17 +3,21 @@ const router = express.Router();
 const {
   createfirstComment,
   addReply,
-  getCommentAndReplies,
+  getCommentsForQuestion,
   deleteComment,
   updateComment,
+  getCommentAndReplies,
+  getSingleComment,
 } = require("../controllers/comment.controller");
 
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
-router.post("/postComment", ensureAuthenticated, createfirstComment);
-router.post("/addreply", ensureAuthenticated, addReply);
-router.get("/getComment", ensureAuthenticated, getCommentAndReplies);
-router.patch("/updateComment", ensureAuthenticated, updateComment);
-router.delete("/deleteComment", ensureAuthenticated, deleteComment);
+router.post("/postComment", createfirstComment);
+router.post("/addreply", addReply);
+router.patch("/updateComment", updateComment);
+router.get("/getComment", getCommentsForQuestion);
+router.get("/getCommentandReplies", getCommentAndReplies);
+router.get("/getSingleComment", getSingleComment);
+router.delete("/deleteComment", deleteComment);
 
 module.exports = router;
