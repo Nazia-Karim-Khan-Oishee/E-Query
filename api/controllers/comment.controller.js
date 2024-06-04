@@ -91,6 +91,44 @@ const getCommentAndReplies = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+const getSingleComment = async (req, res) => {
+  try {
+    const commentId = req.query.commentId;
+    const comment = await Comment.findById(commentId);
+
+    res.status(200).json(comment);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getCommentsForQuestion = async (req, res) => {
+  try {
+    const questionId = req.query.questionId;
+
+    // Find all comments for the given question ID
+    const comments = await Comment.find({ questionId }).populate(
+      "replies.commenterId"
+    );
+
+    // If no comments are found for the given question ID, return an error
+    if (!comments || comments.length === 0) {
+      console.log("No comments found for the question");
+      return res
+        .status(404)
+        .json({ error: "No comments found for the question" });
+    }
+
+    // Return the comments
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 const updateComment = async (req, res) => {
   try {
     const { comment } = req.body;
@@ -149,7 +187,9 @@ const deleteComment = async (req, res) => {
 module.exports = {
   createfirstComment,
   addReply,
-  getCommentAndReplies,
+  getCommentsForQuestion,
   deleteComment,
   updateComment,
+  getCommentAndReplies,
+  getSingleComment,
 };
