@@ -1,4 +1,5 @@
 .App {
+
     text-align: center;
   }
   
@@ -110,3 +111,93 @@
     }
   }
   
+
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+/* 
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+.map-container {
+  margin: auto;
+  height: 20rem;
+  width: 80%;
+}
+
+.sidebar {
+  height: 100vh;
+  background-color: #cef2d6;
+}
+.side-bar {
+  background-color: #cef2d6;
+}
+.sidebar.items {
+  background-color: #c5f0cf;
+}
+.bg-gray-50 {
+  background-color: #cef2d6 !important;
+}
+.btn {
+  background-color: #03a832 !important;
+  color: white !important;
+}
+
+.btn:hover {
+  background-color: #1a7333 !important;
+  color: white !important;
+}
+.form-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-half {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
+
