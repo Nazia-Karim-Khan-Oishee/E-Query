@@ -9,7 +9,7 @@ const {
 } = require("../controllers/resource.controller");
 
 const { uploadResource } = require("../middleware/pdf.middleware");
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.post(
   "/postResource",
