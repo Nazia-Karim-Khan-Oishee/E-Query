@@ -87,27 +87,68 @@ const getLogin = async (req, res) => {
   res.sendFile(filePath);
 };
 
-const postLogin = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return next(err);
+// const postLogin = (req, res, next) => {
+// passport.authenticate("local", (err, user, info) => {
+//   if (err) {
+//     return next(err);
+//   }
+
+//   if (!user) {
+//     return res.redirect("/error");
+//   }
+//   // const accessToken = req.body.access_token;
+
+//   req.logIn(user, (err) => {
+//     if (err) {
+//       return next(err);
+//     }
+
+//     console.log("Login Request Received");
+//     console.log("Session:", req.session);
+//     // res.redirect("/welcome");
+//   });
+// })(req, res, next);
+
+//   {email} = req.email;
+//         const user = await User.findOne({ email: email });
+
+// if(user){
+//     const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
+
+//     res.json({ token, user: { email: user.email, id: user._id } });
+//   } else {
+//     res.json({ error: "Invalid Email or Password" });
+//   }
+// };
+
+const postLogin = async (req, res, next) => {
+  try {
+    const { email } = req.body; // Assuming the email is in the request body
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.json({
+        token,
+        user: {
+          email: user.email,
+          id: user._id,
+          name: user.name,
+          role: user.role,
+          profile_image: user.profile_image,
+        },
+      });
+    } else {
+      res.status(401).json({ error: "Invalid Email or Password" });
     }
-
-    if (!user) {
-      return res.redirect("/error");
-    }
-    // const accessToken = req.body.access_token;
-
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-
-      console.log("Login Request Received");
-      console.log("Session:", req.session);
-      // res.redirect("/welcome");
-    });
-  })(req, res, next);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getLogout = async (req, res) => {
