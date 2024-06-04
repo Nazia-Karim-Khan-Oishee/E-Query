@@ -7,14 +7,16 @@ const createToken = (_id) => {
 };
 
 const signUpUserController = async (req, res) => {
-  const { username, email, password, phone, address } = req.body;
+  const { username, email, password, phone } = req.body;
   try {
     const user = await User.signup(username, email, password, phone);
+    console.log(user);
     const token = createToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
+    console.log(token);
     res.status(200).json({
       token: token,
       _id: user._id,
