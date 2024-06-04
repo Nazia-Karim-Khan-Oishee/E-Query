@@ -6,7 +6,7 @@ const {
   getBookmarks,
 } = require("../controllers/bookmark.controller");
 
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.post("/bookmarkComment", ensureAuthenticated, bookmarkComment);
 router.get("/getbookmark", ensureAuthenticated, getBookmarks);
