@@ -12,7 +12,7 @@ const useCreateComment = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user.id;
-      const response = await fetch("http://localhost:8800/postComment", {
+      const response = await fetch("http://localhost:4000/postComment", {
         method: "POST",
         headers: { "Content-Type": "application/json", id: userId },
         body: JSON.stringify({ questionId, comment }),

@@ -9,8 +9,6 @@ import {
   faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Button } from "flowbite-react";
-// import { fa } from "@awesome.me/kit-KIT_CODE/icons";
 const QuestionDetails = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState(null);
@@ -52,7 +50,7 @@ const QuestionDetails = () => {
       try {
         // Fetch question details
         const questionResponse = await fetch(
-          `http://localhost:8800/readQuestion?questionID=${id}`
+          `http://localhost:4000/readQuestion?questionID=${id}`
         );
         if (!questionResponse.ok) {
           throw new Error("Failed to fetch question details");
@@ -62,7 +60,7 @@ const QuestionDetails = () => {
 
         // Fetch comments for the question
         const commentsResponse = await fetch(
-          `http://localhost:8800/getComment?questionId=${id}`
+          `http://localhost:4000/getComment?questionId=${id}`
         );
         if (!commentsResponse.ok) {
           throw new Error("Failed to fetch comments for the question");
@@ -93,7 +91,7 @@ const QuestionDetails = () => {
   const fetchCommentWithReplies = async (commentId) => {
     try {
       const response = await fetch(
-        `http://localhost:8800/getCommentAndReplies?commentId=${commentId}`
+        `http://localhost:4000/getCommentAndReplies?commentId=${commentId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch comment with replies");
@@ -108,7 +106,7 @@ const QuestionDetails = () => {
       // Fetch each reply
       const replyPromises = replyIds.map(async (replyId) => {
         const replyResponse = await fetch(
-          `http://localhost:8800/getSingleComment?commentId=${replyId}`
+          `http://localhost:4000/getSingleComment?commentId=${replyId}`
         );
         if (!replyResponse.ok) {
           throw new Error(`Failed to fetch reply with ID ${replyId}`);

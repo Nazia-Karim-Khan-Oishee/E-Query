@@ -1,6 +1,4 @@
-
 import Signup from "./components/Authentication/Signup";
-import Login from "./components/Authentication/Login";
 import Navbar from "./components/Navbar";
 
 import React from "react";
@@ -10,11 +8,6 @@ import Login from "./pages/login";
 import GetAllQuestions from "./pages/Questions/GetAllQuestions";
 import QuestionDetails from "./pages/Questions/QuestionDetails";
 
-<<<<<<< HEAD
-import { library } from "@fortawesome/fontawesome-svg-core";
-
-=======
->>>>>>> e9096401a74b5b6b75a11b0ff1c281ee4b0be61f
 import "./App.css";
 function App() {
   return (
@@ -28,15 +21,14 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Signup />} />
-              <Route path="/comments" element={<Comments />} />
-        <Route path="/" element={<Login />} />
-        <Route path="/getAllQuestion" element={<GetAllQuestions />} />
-        <Route path="/questions/:id" element={<QuestionDetails />} />
+            <Route path="/comments" element={<Comments />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/getAllQuestion" element={<GetAllQuestions />} />
+            <Route path="/questions/:id" element={<QuestionDetails />} />
           </Routes>
         </div>
       </BrowserRouter>
     </div>
-    
   );
 }
 

@@ -11,7 +11,7 @@ const useAddReply = () => {
     console.log("replyText", replyText);
     try {
       const response = await fetch(
-        `http://localhost:8800/addReply?commentId=${commentId}`,
+        `http://localhost:4000/addReply?commentId=${commentId}`,
         {
           method: "POST",
           headers: {

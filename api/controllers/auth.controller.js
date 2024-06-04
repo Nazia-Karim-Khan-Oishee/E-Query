@@ -48,7 +48,8 @@ const loginUserController = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ message: err.message });
-
+  }
+};
 const getLogin = async (req, res) => {
   const filePath = path.join(__dirname, "..", "views", "welcome.html");
   res.sendFile(filePath);
@@ -115,7 +116,6 @@ const postLogin = async (req, res, next) => {
     }
   } catch (err) {
     next(err);
-
   }
 };
 

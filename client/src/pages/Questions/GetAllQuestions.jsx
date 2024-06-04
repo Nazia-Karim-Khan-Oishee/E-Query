@@ -8,7 +8,7 @@ const GetAllQuestions = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch("http://localhost:8800/getAllQuestion");
+        const response = await fetch("http://localhost:4000/getAllQuestion");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

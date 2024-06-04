@@ -39,7 +39,7 @@ app.use(bookmarkroutes);
 
 mongoose
   .connect(process.env.ATLAS_URI, {
-    dbName: process.env.ATLAS_DEV_DB,
+    dbName: process.env.ATLAS_TEST_DB,
   })
   .then(() => {
     console.log("Connected to Database!");
@@ -50,6 +50,12 @@ mongoose
 
 app.get("/", (req, res) => {
   res.status(201).json({ message: "Connected to Server!" });
+});
+
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
