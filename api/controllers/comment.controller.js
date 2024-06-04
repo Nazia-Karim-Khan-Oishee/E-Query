@@ -1,15 +1,13 @@
 const Question = require("../datamodels/Question.model");
 const Comment = require("../datamodels/Comment.model");
 
-// const path = require("path");
-// const fs = require("fs");
-
 const createfirstComment = async (req, res) => {
   try {
-    const { questionId } = req.query;
+    const { questionId } = req.body;
     const { comment } = req.body;
-
-    const questionExists = await Question.exists({ _id: questionId });
+    const { id } = req.headers.id;
+    console.log("questionId", questionId);
+    const questionExists = await Question.exists({ id: questionId });
     if (!questionExists) {
       console.log("Question not found");
       return res.status(404).json({ error: "Question not found" });
@@ -18,7 +16,7 @@ const createfirstComment = async (req, res) => {
     const newComment = new Comment({
       questionId,
       comment: comment,
-      commenterId: req.user.id,
+      commenterId: id,
     });
 
     const savedComment = await newComment.save();
@@ -33,22 +31,23 @@ const createfirstComment = async (req, res) => {
 const addReply = async (req, res) => {
   try {
     const { reply } = req.body;
-    const { commentId } = req.query; // Extract commentId from query parameters
-
+    const { commentId } = req.query;
+    console.log("commentId", commentId);
     const newReply = new Comment({
       comment: reply,
-      commenterId: req.user.id,
+      commenterId: req.headers.id,
     });
 
     const savedReply = await newReply.save();
-
+    console.log("Reply posted");
+    console.log("savedReply._id", savedReply._id);
     // Find the parent comment and push the reply's _id to its replies array
     const parentComment = await Comment.findByIdAndUpdate(
       commentId,
       { $push: { replies: savedReply._id } },
       { new: true }
     );
-
+    console.log("parentComment", parentComment);
     return res.status(201).json(savedReply);
   } catch (error) {
     console.error(error);

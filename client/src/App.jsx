@@ -4,6 +4,9 @@ import Comments from "./pages/comments";
 import Login from "./pages/login";
 import GetAllQuestions from "./pages/Questions/GetAllQuestions";
 import QuestionDetails from "./pages/Questions/QuestionDetails";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+
 import "./App.css";
 function App() {
   return (
