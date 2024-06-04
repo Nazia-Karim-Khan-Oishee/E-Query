@@ -94,9 +94,9 @@ const getCommentAndReplies = async (req, res) => {
 
 const getSingleComment = async (req, res) => {
   try {
-    const commentId = req.query.commentId;
-    const comment = await Comment.findById(commentId);
-
+    const commentId = req.query.commentId; // Extract commentId from req.query
+    const comment = await Comment.findById(commentId); // Pass commentId to findById method
+    console.log("comment", comment);
     res.status(200).json(comment);
   } catch (error) {
     console.error(error);
