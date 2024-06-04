@@ -10,7 +10,7 @@ const {
   searchQuestions,
 } = require("../controllers/question.controller");
 
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.post("/postQuestion", ensureAuthenticated, createQuestion);
 router.patch("/updateQuestionText", ensureAuthenticated, updateQuestionsText);

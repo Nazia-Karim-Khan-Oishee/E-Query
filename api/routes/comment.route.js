@@ -8,7 +8,7 @@ const {
   updateComment,
 } = require("../controllers/comment.controller");
 
-const ensureAuthenticated = require("../middleware/auth.middleware");
+const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.post("/postComment", ensureAuthenticated, createfirstComment);
 router.post("/addreply", ensureAuthenticated, addReply);
