@@ -1,6 +1,5 @@
 import React from "react";
 import { Card } from "flowbite-react";
-import NavBar from "../components/navbar";
 
 const Comments = () => {
   return (

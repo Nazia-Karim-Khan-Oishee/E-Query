@@ -1,6 +1,4 @@
-
 import Signup from "./components/Authentication/Signup";
-import Login from "./components/Authentication/Login";
 import Navbar from "./components/Navbar";
 
 import React from "react";
@@ -23,15 +21,14 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Signup />} />
-              <Route path="/comments" element={<Comments />} />
-        <Route path="/" element={<Login />} />
-        <Route path="/getAllQuestion" element={<GetAllQuestions />} />
-        <Route path="/questions/:id" element={<QuestionDetails />} />
+            <Route path="/comments" element={<Comments />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/getAllQuestion" element={<GetAllQuestions />} />
+            <Route path="/questions/:id" element={<QuestionDetails />} />
           </Routes>
         </div>
       </BrowserRouter>
     </div>
-    
   );
 }
 

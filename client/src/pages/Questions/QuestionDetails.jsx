@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faTurnDownRight } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-
+import useCreateComment from "../../hooks/useCreateComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { fa } from "@awesome.me/kit-KIT_CODE/icons";
+import useAddReply from "../../hooks/useAddReply";
+import {
+  faThumbsUp,
+  faThumbsDown,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const QuestionDetails = () => {
   const { id } = useParams();
@@ -13,13 +15,42 @@ const QuestionDetails = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [comment, setComment] = useState("");
+  const [reply, setReply] = useState("");
+  const {
+    isLoading,
+    error: newerror,
+    createdComment,
+    createComment,
+  } = useCreateComment();
+  const { addReply } = useAddReply();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("id", id);
+    await createComment(id, comment);
+    setComment("");
+    window.location.reload();
+  };
+
+  const handleReply = async (e, commentId) => {
+    e.preventDefault();
+    console.log("id", commentId);
+    console.log("Reply:", reply[commentId]);
+
+    console.log("id", commentId);
+    console.log("Reply:", reply[commentId]);
+    await addReply(commentId.toString(), reply[commentId]);
+    setReply("");
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchQuestionAndComments = async () => {
       try {
         // Fetch question details
         const questionResponse = await fetch(
-          `http://localhost:8800/readQuestion?questionID=${id}`
+          `http://localhost:4000/readQuestion?questionID=${id}`
         );
         if (!questionResponse.ok) {
           throw new Error("Failed to fetch question details");
@@ -29,7 +60,7 @@ const QuestionDetails = () => {
 
         // Fetch comments for the question
         const commentsResponse = await fetch(
-          `http://localhost:8800/getComment?questionId=${id}`
+          `http://localhost:4000/getComment?questionId=${id}`
         );
         if (!commentsResponse.ok) {
           throw new Error("Failed to fetch comments for the question");
@@ -60,7 +91,7 @@ const QuestionDetails = () => {
   const fetchCommentWithReplies = async (commentId) => {
     try {
       const response = await fetch(
-        `http://localhost:8800/getCommentAndReplies?commentId=${commentId}`
+        `http://localhost:4000/getCommentAndReplies?commentId=${commentId}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch comment with replies");
@@ -75,7 +106,7 @@ const QuestionDetails = () => {
       // Fetch each reply
       const replyPromises = replyIds.map(async (replyId) => {
         const replyResponse = await fetch(
-          `http://localhost:8800/getSingleComment?commentId=${replyId}`
+          `http://localhost:4000/getSingleComment?commentId=${replyId}`
         );
         if (!replyResponse.ok) {
           throw new Error(`Failed to fetch reply with ID ${replyId}`);
@@ -129,15 +160,34 @@ const QuestionDetails = () => {
           {comments.map((comment) => (
             <li key={comment._id}>
               <p>{comment.comment}</p>
-
+              <FontAwesomeIcon icon={faThumbsUp} />
+              {comment.upvotes}
+              <FontAwesomeIcon icon={faThumbsDown} className="ml-4" />
+              {comment.downvotes}
+              <form onSubmit={(e) => handleReply(e, comment._id)}>
+                {" "}
+                {/* Pass comment ID */}
+                <textarea
+                  className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                  name="reply"
+                  value={reply[comment._id] || ""}
+                  placeholder="Add a reply"
+                  onChange={(e) =>
+                    setReply({ ...reply, [comment._id]: e.target.value })
+                  }
+                />
+                <button type="submit">Reply</button>
+              </form>
               {comment.replies.length > 0 && (
-                <ul className="ml-4">
-                  <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
+                <ul className="ml-6">
+                  {/* <FontAwesomeIcon icon={faArrowRight} /> */}
                   {comment.replies.map((reply) => (
                     <li key={reply._id}>
                       <p>{reply.comment}</p>
-                      <FontAwesomeIcon icon="fa-solid fa-thumbs-up" />
-                      <FontAwesomeIcon icon="fa-solid fa-thumbs-down" />
+                      <FontAwesomeIcon icon={faThumbsUp} />
+                      {reply.upvotes}{" "}
+                      <FontAwesomeIcon icon={faThumbsDown} className="ml-4" />
+                      {reply.downvotes}
                     </li>
                   ))}
                 </ul>
@@ -148,6 +198,16 @@ const QuestionDetails = () => {
       ) : (
         <p>No comments for this question</p>
       )}
+      <form onSubmit={handleSubmit}>
+        <textarea
+          className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2" // Adjust width here
+          name="comment"
+          value={comment}
+          placeholder="Add a comment"
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 };
