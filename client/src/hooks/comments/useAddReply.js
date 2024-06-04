@@ -16,7 +16,7 @@ const useAddReply = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            id: JSON.parse(localStorage.getItem("user")).id,
+            id: JSON.parse(localStorage.getItem("user"))._id,
           },
           body: JSON.stringify({ reply: replyText }),
         }

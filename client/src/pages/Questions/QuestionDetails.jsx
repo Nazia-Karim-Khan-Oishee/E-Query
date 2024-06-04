@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useCreateComment from "../../hooks/useCreateComment";
+import useCreateComment from "../../hooks/comments/useCreateComment";
+import useUpdateComment from "../../hooks/comments/useUpdateComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useAddReply from "../../hooks/useAddReply";
+import useAddReply from "../../hooks/comments/useAddReply";
 import {
   faThumbsUp,
   faThumbsDown,
   faArrowRight,
+  faPen,
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
 const QuestionDetails = () => {
@@ -17,12 +20,17 @@ const QuestionDetails = () => {
   const [error, setError] = useState("");
   const [comment, setComment] = useState("");
   const [reply, setReply] = useState("");
+  const [editingComment, setEditingComment] = useState(null);
+  const [newCommentText, setNewCommentText] = useState("");
+
+  const userId = JSON.parse(localStorage.getItem("user"))._id;
   const {
     isLoading,
     error: newerror,
     createdComment,
     createComment,
   } = useCreateComment();
+  const { updateComment } = useUpdateComment();
   const { addReply } = useAddReply();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,6 +138,16 @@ const QuestionDetails = () => {
     }
   };
 
+  const handleEditClick = (comment) => {
+    setEditingComment(comment._id);
+    setNewCommentText(comment.comment);
+  };
+
+  const handleSaveClick = (commentID) => {
+    updateComment(commentID, newCommentText);
+    setEditingComment(null);
+    window.location.reload();
+  };
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -159,11 +177,39 @@ const QuestionDetails = () => {
         <ul>
           {comments.map((comment) => (
             <li key={comment._id}>
-              <p>{comment.comment}</p>
-              <FontAwesomeIcon icon={faThumbsUp} />
+              {editingComment === comment._id ? (
+                <>
+                  <textarea
+                    value={newCommentText}
+                    onChange={(e) => setNewCommentText(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                  />
+                  <button onClick={() => handleSaveClick(comment._id)}>
+                    Save
+                  </button>
+                  <button onClick={() => setEditingComment(null)}>
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>{comment.comment}</p>
+                  {comment.commenterId === userId && (
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      className="ml-4 cursor-pointer"
+                      onClick={() => handleEditClick(comment)}
+                    />
+                  )}
+                </>
+              )}
+              <FontAwesomeIcon icon={faThumbsUp} className="ml-4" />
               {comment.upvotes}
               <FontAwesomeIcon icon={faThumbsDown} className="ml-4" />
               {comment.downvotes}
+              {comment.commenterId === userId && (
+                <FontAwesomeIcon icon={faTrashCan} className="ml-4" />
+              )}
               <form onSubmit={(e) => handleReply(e, comment._id)}>
                 {" "}
                 {/* Pass comment ID */}
@@ -183,11 +229,40 @@ const QuestionDetails = () => {
                   {/* <FontAwesomeIcon icon={faArrowRight} /> */}
                   {comment.replies.map((reply) => (
                     <li key={reply._id}>
-                      <p>{reply.comment}</p>
-                      <FontAwesomeIcon icon={faThumbsUp} />
+                      {/* <p>{reply.comment}</p> */}
+                      {editingComment === reply._id ? (
+                        <>
+                          <textarea
+                            value={newCommentText}
+                            onChange={(e) => setNewCommentText(e.target.value)}
+                            className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                          />
+                          <button onClick={() => handleSaveClick(reply._id)}>
+                            Save
+                          </button>
+                          <button onClick={() => setEditingComment(null)}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p>{reply.comment}</p>
+                          {reply.commenterId === userId && (
+                            <FontAwesomeIcon
+                              icon={faPen}
+                              className="ml-4 cursor-pointer"
+                              onClick={() => handleEditClick(reply)}
+                            />
+                          )}
+                        </>
+                      )}
+                      <FontAwesomeIcon icon={faThumbsUp} className="ml-4" />
                       {reply.upvotes}{" "}
                       <FontAwesomeIcon icon={faThumbsDown} className="ml-4" />
                       {reply.downvotes}
+                      {reply.commenterId === userId && (
+                        <FontAwesomeIcon icon={faTrashCan} className="ml-4" />
+                      )}
                     </li>
                   ))}
                 </ul>

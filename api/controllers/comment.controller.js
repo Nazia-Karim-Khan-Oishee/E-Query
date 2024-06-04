@@ -5,9 +5,9 @@ const createfirstComment = async (req, res) => {
   try {
     const { questionId } = req.body;
     const { comment } = req.body;
-    const { id } = req.headers.id;
+    const id = req.headers["id"];
     console.log("questionId", questionId);
-    const questionExists = await Question.exists({ id: questionId });
+    const questionExists = await Question.exists({ _id: questionId });
     if (!questionExists) {
       console.log("Question not found");
       return res.status(404).json({ error: "Question not found" });
@@ -21,6 +21,7 @@ const createfirstComment = async (req, res) => {
 
     const savedComment = await newComment.save();
     console.log("Comment posted");
+    console.log("savedComment", savedComment.commenterId);
     res.status(201).json(savedComment);
   } catch (error) {
     console.error(error);
@@ -35,7 +36,7 @@ const addReply = async (req, res) => {
     console.log("commentId", commentId);
     const newReply = new Comment({
       comment: reply,
-      commenterId: req.headers.id,
+      commenterId: req.headers["id"],
     });
 
     const savedReply = await newReply.save();
@@ -132,15 +133,12 @@ const updateComment = async (req, res) => {
   try {
     const { comment } = req.body;
     const commentID = req.query.commentID;
-
+    console.log("comment UPDATE");
     const existingComment = await Comment.findById(commentID);
 
-    if (!existingComment) {
-      console.log("Comment not found");
-      return res.status(404).json({ error: "Comment not found" });
-    }
+    console.log("existingComment", existingComment.commenterId);
 
-    if (existingComment.commenterId !== req.user.id) {
+    if (existingComment.commenterId !== req.headers["id"]) {
       console.log("Unauthorized");
       return res.status(401).json({ error: "Unauthorized" });
     }
