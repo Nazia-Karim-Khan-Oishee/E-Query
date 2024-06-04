@@ -29,6 +29,7 @@ const signUpUserController = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
 const loginUserController = async (req, res) => {
   const { userId, password } = req.body;
   try {
@@ -49,6 +50,74 @@ const loginUserController = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+};
+const getLogin = async (req, res) => {
+  const filePath = path.join(__dirname, "..", "views", "welcome.html");
+  res.sendFile(filePath);
+};
+
+// const postLogin = (req, res, next) => {
+// passport.authenticate("local", (err, user, info) => {
+//   if (err) {
+//     return next(err);
+//   }
+
+//   if (!user) {
+//     return res.redirect("/error");
+//   }
+//   // const accessToken = req.body.access_token;
+
+//   req.logIn(user, (err) => {
+//     if (err) {
+//       return next(err);
+//     }
+
+//     console.log("Login Request Received");
+//     console.log("Session:", req.session);
+//     // res.redirect("/welcome");
+//   });
+// })(req, res, next);
+
+//   {email} = req.email;
+//         const user = await User.findOne({ email: email });
+
+// if(user){
+//     const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
+
+//     res.json({ token, user: { email: user.email, id: user._id } });
+//   } else {
+//     res.json({ error: "Invalid Email or Password" });
+//   }
+// };
+
+const postLogin = async (req, res, next) => {
+  try {
+    const { email } = req.body; // Assuming the email is in the request body
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.json({
+        token,
+        user: {
+          email: user.email,
+          id: user._id,
+          name: user.name,
+          role: user.role,
+          profile_image: user.profile_image,
+        },
+      });
+    } else {
+      res.status(401).json({ error: "Invalid Email or Password" });
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
