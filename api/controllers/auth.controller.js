@@ -1,222 +1,207 @@
 const User = require("../datamodels/User.model");
-const path = require("path");
-const bcrypt = require("bcrypt");
-const passport = require("passport");
 const jwt = require("jsonwebtoken");
-var nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
+require("dotenv").config();
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET_KEY, { expiresIn: "3d" });
+};
 
-const JWT_SECRET =
-  "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
-
-const postRegister = async (req, res, next) => {
-  const { email, password } = req.body;
-  const name = req.body.username;
-
-  console.log(name);
-  console.log(email);
-  console.log(password);
-
-  const errors = [];
-  if (!name || !email || !password) {
-    errors.push("All fields are required!");
-  }
-  // Basic email format validation using a regular expression
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    errors.push("Invalid email address format.");
-  }
-  // Password strength check
-  const hasLowercase = /[a-z]/.test(password);
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasDigit = /\d/.test(password);
-  const hasSpecialChar = /[@$!%*?&]/.test(password);
-  const isMinimumLength = password.length >= 5;
-
-  if (
-    !hasLowercase ||
-    !hasUppercase ||
-    !hasDigit ||
-    !hasSpecialChar ||
-    !isMinimumLength
-  ) {
-    errors.push(
-      "Password must meet the following criteria:\n" +
-        "- At least one lowercase letter\n" +
-        "- At least one uppercase letter\n" +
-        "- At least one digit\n" +
-        "- At least one special character (@$!%*?&)\n" +
-        "- Be at least 5 characters long"
-    );
-  }
-
-  if (errors.length > 0) {
-    console.log(errors);
-    res.status(400).json({ error: errors });
-  } else {
-    // Create New User
-    try {
-      const user = await User.findOne({ email: email });
-
-      if (user) {
-        errors.push("User already exists with this email!");
-        return res.status(400).json({ error: errors });
-      }
-
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(password, salt);
-
-      const newUser = new User({
-        name,
-        email,
-        password: hash,
-      });
-
-      await newUser.save();
-
-      console.log("Registration Successful");
-      res.status(200).json({ response: "Registration Successful" });
-    } catch (error) {
-      console.error("Error during registration:", error);
-      errors.push("Please try again");
-      res.status(400).json({ error: errors });
-    }
+const signUpUserController = async (req, res) => {
+  const { username, email, password, phone, address } = req.body;
+  try {
+    const user = await User.signup(username, email, password, phone);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({
+      token: token,
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (err) {
+    console.log("error ashse");
+    console.log(err);
+    res.status(400).json({ message: err.message });
   }
 };
+
+const loginUserController = async (req, res) => {
+  const { userId, password } = req.body;
+  try {
+    const user = await User.login(userId, password);
+    const id = user._id;
+    const token = createToken(user._id);
+    if (user) {
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+    }
+    res.status(200).json({
+      token: token,
+      _id: id,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+
 const getLogin = async (req, res) => {
   const filePath = path.join(__dirname, "..", "views", "welcome.html");
   res.sendFile(filePath);
 };
 
-const postLogin = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return next(err);
+// const postLogin = (req, res, next) => {
+// passport.authenticate("local", (err, user, info) => {
+//   if (err) {
+//     return next(err);
+//   }
+
+//   if (!user) {
+//     return res.redirect("/error");
+//   }
+//   // const accessToken = req.body.access_token;
+
+//   req.logIn(user, (err) => {
+//     if (err) {
+//       return next(err);
+//     }
+
+//     console.log("Login Request Received");
+//     console.log("Session:", req.session);
+//     // res.redirect("/welcome");
+//   });
+// })(req, res, next);
+
+//   {email} = req.email;
+//         const user = await User.findOne({ email: email });
+
+// if(user){
+//     const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
+
+//     res.json({ token, user: { email: user.email, id: user._id } });
+//   } else {
+//     res.json({ error: "Invalid Email or Password" });
+//   }
+// };
+
+const postLogin = async (req, res, next) => {
+  try {
+    const { email } = req.body; // Assuming the email is in the request body
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.json({
+        token,
+        user: {
+          email: user.email,
+          id: user._id,
+          name: user.name,
+          role: user.role,
+          profile_image: user.profile_image,
+        },
+      });
+    } else {
+      res.status(401).json({ error: "Invalid Email or Password" });
     }
+  } catch (err) {
+    next(err);
 
-    if (!user) {
-      return res.redirect("/error");
-    }
-    // const accessToken = req.body.access_token;
-
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-
-      console.log("Login Request Received");
-      console.log("Session:", req.session);
-      // res.redirect("/welcome");
-    });
-  })(req, res, next);
+  }
 };
 
 const getLogout = async (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      res.json({ error: err });
-    } else {
-      res.send("Logged Out");
-      console.log("Succesfully logged out");
-    }
-  });
+  res.cookie("jwt", "", { maxAge: 1 });
+  res.status(200).json({ message: "Logged out" });
 };
 
-const showerror = async (req, res) => {
-  const filePath = path.join(__dirname, "..", "views", "error.html");
-  res.status(400).sendFile(filePath);
-};
-
-const forgetPasssword = async (req, res, next) => {
-  const { email } = req.body;
+const changePassword = async (req, res) => {
+  const { userId, password, newPassword } = req.body;
   try {
-    const oldUser = await User.findOne({ email });
-    if (!oldUser) {
-      return res.json({ status: "No user with this email exists!!" });
-    }
+    const user = await User.login(userId, password);
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
-    const secret = JWT_SECRET + oldUser.password;
-    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-      expiresIn: "5m",
+const forgotPassword = async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new Error("User not found"));
+  }
+
+  try {
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+    console.log(resetToken);
+    let transporter = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASS,
+      },
     });
 
-    const link = `http://localhost:3000/reset-password/${oldUser._id}/${token}`;
-    console.log(link);
-    res.send("Link has been sent");
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    let info = await transporter.sendMail({
+      from: '"Ecosync", admin@ecosync.com',
+      to: req.body.email,
+      subject: "Password Reset Token",
+      text: `Hello, ${user.username} \n We have received a password reset request. Your reset token is: ${resetToken}`, // plain text body
+    });
+    res.status(200).json({
+      message: "Password reset token sent to your email",
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    res
+      .status(500)
+      .json({ message: "An error occurred while sending the email" });
   }
 };
-
-const reset_password = async (req, res) => {
-  const { id, token } = req.params;
-  const { password } = req.body;
-
-  console.log(password);
-  const oldUser = await User.findOne({ _id: id });
-
-  if (!oldUser) {
-    return res.json({ status: "User Do Not Exists!!" });
-  }
-
-  const secret = JWT_SECRET + oldUser.password;
-
+const passwordReset = async (req, res, next) => {
   try {
-    errors = [];
-
-    const hasLowercase = /[a-z]/.test(password);
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasDigit = /\d/.test(password);
-    const hasSpecialChar = /[@$!%*?&]/.test(password);
-    const isMinimumLength = password.length >= 5;
-
-    if (
-      !hasLowercase ||
-      !hasUppercase ||
-      !hasDigit ||
-      !hasSpecialChar ||
-      !isMinimumLength
-    ) {
-      errors.push(
-        "Password must meet the following criteria:\n" +
-          "- At least one lowercase letter\n" +
-          "- At least one uppercase letter\n" +
-          "- At least one digit\n" +
-          "- At least one special character (@$!%*?&)\n" +
-          "- Be at least 5 characters long"
-      );
+    const token = req.body.token;
+    const user = await User.findOne({
+      passwordResetToken: token,
+      passwordResetTokenExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+      return next(new Error("Invalid token or token expired"));
     }
+    user.password = req.body.password;
 
-    if (errors.length > 0) {
-      console.log(errors);
-      res.status(400).json({ error: errors });
-    } else {
-      const verify = jwt.verify(token, secret);
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(password, salt);
-
-      await User.updateOne(
-        { _id: id },
-        {
-          $set: {
-            password: hash,
-          },
-        }
-      );
-      res.json({ status: "password changed" });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(401).send("Not Verified");
+    console.log("ekhane ashe");
+    user.passwordResetToken = undefined;
+    console.log("undefined hoyna");
+    user.passwordResetTokenExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    // res.cookie("jwt", "", { maxAge: 1 });
+    console.log("Password reset successful");
+    res.status(200).json({ message: "Password reset successful" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
-
 module.exports = {
-  postRegister,
-  forgetPasssword,
+  loginUserController,
   getLogout,
-  postLogin,
-  getLogin,
-  showerror,
-  reset_password,
+  changePassword,
+  forgotPassword,
+  passwordReset,
+  signUpUserController,
 };
