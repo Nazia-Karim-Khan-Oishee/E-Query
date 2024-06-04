@@ -34,12 +34,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  address: {
-    type: String,
-    required: false,
-  },
   role: {
     type: String,
+  },
+  profilePicture: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dkkgmzv7k/image/upload/v1630594555/Profile%20Pictures/default-profile-picture",
   },
 
   passwordResetToken: String,
@@ -59,13 +60,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.statics.signup = async function (
-  username,
-  email,
-  password,
-  phone,
-  address
-) {
+userSchema.statics.signup = async function (username, email, password, phone) {
   if (!email) {
     throw new Error("Email and password are required");
   }
@@ -81,7 +76,6 @@ userSchema.statics.signup = async function (
     email,
     password,
     phone,
-    address,
   });
   return user;
 };

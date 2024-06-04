@@ -9,7 +9,7 @@ const createToken = (_id) => {
 const signUpUserController = async (req, res) => {
   const { username, email, password, phone, address } = req.body;
   try {
-    const user = await User.signup(username, email, password, phone, address);
+    const user = await User.signup(username, email, password, phone);
     const token = createToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
