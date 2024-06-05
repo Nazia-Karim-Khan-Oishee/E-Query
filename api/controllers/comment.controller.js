@@ -167,7 +167,7 @@ const deleteComment = async (req, res) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
-    if (existingComment.commenterId !== req.user.id) {
+    if (existingComment.commenterId !== req.headers["id"]) {
       console.log("Unauthorized");
       return res.status(401).json({ error: "Unauthorized" });
     }

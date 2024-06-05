@@ -4,6 +4,7 @@ import useCreateComment from "../../hooks/comments/useCreateComment";
 import useUpdateComment from "../../hooks/comments/useUpdateComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAddReply from "../../hooks/comments/useAddReply";
+import useDeleteComment from "../../hooks/comments/useDeleteComment";
 import {
   faThumbsUp,
   faThumbsDown,
@@ -30,8 +31,10 @@ const QuestionDetails = () => {
     createdComment,
     createComment,
   } = useCreateComment();
+
   const { updateComment } = useUpdateComment();
   const { addReply } = useAddReply();
+  const { deleteComment } = useDeleteComment();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,18 +77,19 @@ const QuestionDetails = () => {
           throw new Error("Failed to fetch comments for the question");
         }
         const commentsData = await commentsResponse.json();
+
         // Fetch replies for each comment
         const commentsWithReplies = await Promise.all(
           commentsData.map(async (comment) => {
+            console.log("commentId in ", comment._id);
             const commentWithReplies = await fetchCommentWithReplies(
               comment._id
             );
             return commentWithReplies;
           })
         );
-        setComments(commentsWithReplies);
 
-        console.log(commentsWithReplies);
+        setComments(commentsWithReplies);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -98,6 +102,7 @@ const QuestionDetails = () => {
 
   const fetchCommentWithReplies = async (commentId) => {
     try {
+      console.log("commentId in fetchCommentWithReplies", commentId);
       const response = await fetch(
         `http://localhost:4000/getCommentAndReplies?commentId=${commentId}`
       );
@@ -122,19 +127,12 @@ const QuestionDetails = () => {
         return await replyResponse.json();
       });
 
-      // Wait for all reply fetch requests to complete
       const replies = await Promise.all(replyPromises);
-
-      // Replace reply IDs with actual reply data in the comment data
-      const commentWithReplies = {
-        ...commentData,
-        replies: replies,
-      };
-
-      return commentWithReplies;
+      return { ...commentData, replies };
     } catch (error) {
       console.error("Error fetching comment with replies:", error);
-      return null;
+      return { error: "Error fetching comment with replies" };
+      // return { ...commentData, replies: [] };
     }
   };
 
@@ -146,6 +144,11 @@ const QuestionDetails = () => {
   const handleSaveClick = (commentID) => {
     updateComment(commentID, newCommentText);
     setEditingComment(null);
+    window.location.reload();
+  };
+
+  const handleDeleteClick = (commentID) => {
+    deleteComment(commentID);
     window.location.reload();
   };
   if (loading) {
@@ -173,7 +176,7 @@ const QuestionDetails = () => {
       )}
 
       <h2 className="text-xl font-bold mt-4 mb-2">Comments</h2>
-      {comments.length > 0 ? (
+      {comments && comments.length > 0 ? (
         <ul>
           {comments.map(
             (comment) =>
@@ -213,12 +216,22 @@ const QuestionDetails = () => {
                           )}
                         </>
                       )}
-                      <FontAwesomeIcon icon={faThumbsUp} className="ml-4" />
+                      <FontAwesomeIcon
+                        icon={faThumbsUp}
+                        className="ml-4 cursor-pointer"
+                      />
                       {comment.upvotes}
-                      <FontAwesomeIcon icon={faThumbsDown} className="ml-4" />
+                      <FontAwesomeIcon
+                        icon={faThumbsDown}
+                        className="ml-4 cursor-pointer"
+                      />
                       {comment.downvotes}
                       {comment.commenterId === userId && (
-                        <FontAwesomeIcon icon={faTrashCan} className="ml-4" />
+                        <FontAwesomeIcon
+                          icon={faTrashCan}
+                          className="ml-4 cursor-pointer"
+                          onClick={() => handleDeleteClick(comment._id)}
+                        />
                       )}
 
                       <form onSubmit={(e) => handleReply(e, comment._id)}>
@@ -238,7 +251,7 @@ const QuestionDetails = () => {
                         />
                         <button type="submit">Reply</button>
                       </form>
-                      {comment.replies.length > 0 && (
+                      {comment.replies && comment.replies.length > 0 && (
                         <ul className="ml-6">
                           {/* <FontAwesomeIcon icon={faArrowRight} /> */}
                           {comment.replies.map((reply) => (
@@ -276,18 +289,19 @@ const QuestionDetails = () => {
                               )}
                               <FontAwesomeIcon
                                 icon={faThumbsUp}
-                                className="ml-4"
+                                className="ml-4 cursor-pointer"
                               />
                               {reply.upvotes}{" "}
                               <FontAwesomeIcon
                                 icon={faThumbsDown}
-                                className="ml-4"
+                                className="ml-4 cursor-pointer"
                               />
                               {reply.downvotes}
                               {reply.commenterId === userId && (
                                 <FontAwesomeIcon
                                   icon={faTrashCan}
-                                  className="ml-4"
+                                  className="ml-4 cursor-pointer"
+                                  onClick={() => handleDeleteClick(reply._id)}
                                 />
                               )}
                             </li>
