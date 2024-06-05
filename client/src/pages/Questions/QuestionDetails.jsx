@@ -182,6 +182,23 @@ const QuestionDetails = () => {
           <p className="text-gray-600">Topic: {question.topic}</p>
           <p className="text-gray-600">Upvotes: {question.upvotes}</p>
           <p className="text-gray-600">Downvotes: {question.downvotes}</p>
+          {question.images && question.images.length > 0 ? (
+            <div className="flex flex-wrap">
+              {question.images.map(
+                (image) => (
+                  console.log("image", image),
+                  (
+                    <img
+                      key={image}
+                      src={image}
+                      alt="Uploaded"
+                      className="w-1/4 h-auto"
+                    />
+                  )
+                )
+              )}
+            </div>
+          ) : null}
           <p className="text-gray-400 text-sm">
             Uploaded on: {new Date(question.timestamp).toLocaleString()}
           </p>
@@ -192,147 +209,170 @@ const QuestionDetails = () => {
 
       <h2 className="text-xl font-bold mt-4 mb-2">Comments</h2>
       {comments && comments.length > 0 ? (
-        <ul>
-          {comments.map(
-            (comment) =>
-              comment && (
-                <li key={comment._id}>
-                  <ul>
-                    {" "}
-                    {/* Move the ul element here */}
-                    <li key={comment._id}>
-                      {comment && reply && editingComment === reply._id ? (
-                        <>
-                          <textarea
-                            value={reply.newCommentText}
-                            onChange={(e) => setNewCommentText(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
-                          />
-                          <button onClick={() => handleSaveClick(comment._id)}>
-                            Save
-                          </button>
-                          <button onClick={() => setEditingComment(null)}>
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          {comment && (
-                            <>
-                              <p>{comment.comment}</p>
-                              {comment.commenterId === userId && (
-                                <FontAwesomeIcon
-                                  icon={faPen}
-                                  className="ml-4 cursor-pointer"
-                                  onClick={() => handleEditClick(comment)}
-                                />
-                              )}
-                            </>
-                          )}
-                        </>
-                      )}
-                      <FontAwesomeIcon
-                        icon={faThumbsUp}
-                        className="ml-4 cursor-pointer"
-                        onClick={() => handleUpvote(comment._id)}
-                      />
-                      {comment.upvotes}
-                      <FontAwesomeIcon
-                        icon={faThumbsDown}
-                        className="ml-4 cursor-pointer"
-                        onClick={() => handleDownvote(comment._id)}
-                      />
-                      {comment.downvotes}
-                      {comment.commenterId === userId && (
-                        <FontAwesomeIcon
-                          icon={faTrashCan}
-                          className="ml-4 cursor-pointer"
-                          onClick={() => handleDeleteClick(comment._id)}
-                        />
-                      )}
-
-                      <form onSubmit={(e) => handleReply(e, comment._id)}>
-                        {" "}
-                        {/* Pass comment ID */}
-                        <textarea
-                          className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
-                          name="reply"
-                          value={reply[comment._id] || ""}
-                          placeholder="Add a reply"
-                          onChange={(e) =>
-                            setReply({
-                              ...reply,
-                              [comment._id]: e.target.value,
-                            })
-                          }
-                        />
-                        <button type="submit">Reply</button>
-                      </form>
-                      {comment.replies && comment.replies.length > 0 && (
-                        <ul className="ml-6">
-                          {/* <FontAwesomeIcon icon={faArrowRight} /> */}
-                          {comment.replies.map((reply) => (
-                            <li key={reply._id}>
-                              {/* <p>{reply.comment}</p> */}
-                              {reply && editingComment === reply._id ? (
-                                <>
-                                  <textarea
-                                    value={reply.newCommentText}
-                                    onChange={(e) =>
-                                      setNewCommentText(e.target.value)
-                                    }
-                                    className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+        (console.log("comments", comments),
+        (
+          <ul>
+            {comments.map(
+              (comment) =>
+                comment && (
+                  <li key={comment._id}>
+                    <ul>
+                      {" "}
+                      {/* Move the ul element here */}
+                      <li key={comment._id}>
+                        {comment && reply && editingComment === reply._id ? (
+                          <>
+                            <textarea
+                              value={reply.newCommentText}
+                              onChange={(e) =>
+                                setNewCommentText(e.target.value)
+                              }
+                              className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                            />
+                            <button
+                              onClick={() => handleSaveClick(comment._id)}>
+                              Save
+                            </button>
+                            <button onClick={() => setEditingComment(null)}>
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            {comment && (
+                              <>
+                                <p>{comment.comment}</p>
+                                {comment.commenterId === userId && (
+                                  <FontAwesomeIcon
+                                    icon={faPen}
+                                    className="ml-4 cursor-pointer"
+                                    onClick={() => handleEditClick(comment)}
                                   />
-                                  <button
-                                    onClick={() => handleSaveClick(reply._id)}>
-                                    Save
-                                  </button>
-                                  <button
-                                    onClick={() => setEditingComment(null)}>
-                                    Cancel
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <p>{reply.comment}</p>
-                                  {reply.commenterId === userId && (
-                                    <FontAwesomeIcon
-                                      icon={faPen}
-                                      className="ml-4 cursor-pointer"
-                                      onClick={() => handleEditClick(reply)}
-                                    />
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
+                        <FontAwesomeIcon
+                          icon={faThumbsUp}
+                          className="ml-4 cursor-pointer"
+                          onClick={() => handleUpvote(comment._id)}
+                        />
+                        {comment.upvotes}
+                        <FontAwesomeIcon
+                          icon={faThumbsDown}
+                          className="ml-4 cursor-pointer"
+                          onClick={() => handleDownvote(comment._id)}
+                        />
+                        {comment.downvotes}
+                        {comment.commenterId === userId && (
+                          <FontAwesomeIcon
+                            icon={faTrashCan}
+                            className="ml-4 cursor-pointer"
+                            onClick={() => handleDeleteClick(comment._id)}
+                          />
+                        )}
+
+                        <form onSubmit={(e) => handleReply(e, comment._id)}>
+                          {" "}
+                          {/* Pass comment ID */}
+                          <textarea
+                            className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                            name="reply"
+                            value={reply[comment._id] || ""}
+                            placeholder="Add a reply"
+                            onChange={(e) =>
+                              setReply({
+                                ...reply,
+                                [comment._id]: e.target.value,
+                              })
+                            }
+                          />
+                          <button type="submit">Reply</button>
+                        </form>
+                        {comment.replies &&
+                          comment.replies.length > 0 &&
+                          comment.replies !== null && (
+                            <ul className="ml-6">
+                              {/* <FontAwesomeIcon icon={faArrowRight} /> */}
+                              {comment.replies.map((reply) => (
+                                <li key={reply}>
+                                  {reply ? (
+                                    <>
+                                      {editingComment === reply._id ? (
+                                        <>
+                                          <textarea
+                                            value={reply.newCommentText}
+                                            onChange={(e) =>
+                                              setNewCommentText(e.target.value)
+                                            }
+                                            className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                                          />
+                                          <button
+                                            onClick={() =>
+                                              handleSaveClick(reply._id)
+                                            }>
+                                            Save
+                                          </button>
+                                          <button
+                                            onClick={() =>
+                                              setEditingComment(null)
+                                            }>
+                                            Cancel
+                                          </button>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <p>{reply.comment}</p>
+                                          {reply.commenterId === userId && (
+                                            <FontAwesomeIcon
+                                              icon={faPen}
+                                              className="ml-4 cursor-pointer"
+                                              onClick={() =>
+                                                handleEditClick(reply)
+                                              }
+                                            />
+                                          )}
+                                        </>
+                                      )}
+                                      <FontAwesomeIcon
+                                        icon={faThumbsUp}
+                                        className="ml-4 cursor-pointer"
+                                        onClick={() => handleUpvote(reply._id)}
+                                      />
+                                      {reply.upvotes}
+                                      <FontAwesomeIcon
+                                        icon={faThumbsDown}
+                                        className="ml-4 cursor-pointer"
+                                        onClick={() =>
+                                          handleDownvote(reply._id)
+                                        }
+                                      />
+                                      {reply.downvotes}
+                                      {reply.commenterId === userId && (
+                                        <FontAwesomeIcon
+                                          icon={faTrashCan}
+                                          className="ml-4 cursor-pointer"
+                                          onClick={() =>
+                                            handleDeleteClick(reply._id)
+                                          }
+                                        />
+                                      )}
+                                    </>
+                                  ) : (
+                                    <p></p>
                                   )}
-                                </>
-                              )}
-                              <FontAwesomeIcon
-                                icon={faThumbsUp}
-                                className="ml-4 cursor-pointer"
-                                onClick={() => handleUpvote(reply._id)}
-                              />
-                              {reply.upvotes}{" "}
-                              <FontAwesomeIcon
-                                icon={faThumbsDown}
-                                className="ml-4 cursor-pointer"
-                                onClick={() => handleDownvote(reply._id)}
-                              />
-                              {reply.downvotes}
-                              {reply.commenterId === userId && (
-                                <FontAwesomeIcon
-                                  icon={faTrashCan}
-                                  className="ml-4 cursor-pointer"
-                                  onClick={() => handleDeleteClick(reply._id)}
-                                />
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  </ul>
-                </li>
-              )
-          )}
-        </ul>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                      </li>
+                    </ul>
+                  </li>
+                )
+            )}
+          </ul>
+        ))
       ) : (
         <p>No comments for this question</p>
       )}

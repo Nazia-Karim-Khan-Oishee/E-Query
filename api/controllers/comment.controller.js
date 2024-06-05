@@ -56,36 +56,54 @@ const addReply = async (req, res) => {
   }
 };
 
+// const getCommentAndReplies = async (req, res) => {
+//   try {
+//     const { commentId } = req.query;
+
+//     const getCommentWithReplies = async (commentId) => {
+//       const comment = await Comment.findById(commentId).populate(
+//         "replies.commenterId"
+//       );
+
+//       if (!comment) {
+//         return null;
+//       }
+
+//       const nestedReplies = await Promise.all(
+//         comment.replies.map((reply) => getCommentWithReplies(reply._id))
+//       );
+
+//       comment.replies = nestedReplies;
+
+//       return comment;
+//     };
+
+//     const commentWithReplies = await getCommentWithReplies(commentId);
+
+//     if (!commentWithReplies) {
+//       console.log("Comment not found");
+//       return res.status(404).json({ error: "Comment not found" });
+//     }
+
+//     res.status(200).json(commentWithReplies);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
 const getCommentAndReplies = async (req, res) => {
   try {
-    const commentId = req.query.commentId;
+    const { commentId } = req.query;
 
     const getCommentWithReplies = async (commentId) => {
       const comment = await Comment.findById(commentId).populate(
         "replies.commenterId"
       );
-
-      if (!comment) {
-        return null;
-      }
-
-      const nestedReplies = await Promise.all(
-        comment.replies.map((reply) => getCommentWithReplies(reply._id))
-      );
-
-      comment.replies = nestedReplies;
-
       return comment;
     };
 
-    const commentWithReplies = await getCommentWithReplies(commentId);
-
-    if (!commentWithReplies) {
-      console.log("Comment not found");
-      return res.status(404).json({ error: "Comment not found" });
-    }
-
-    res.status(200).json(commentWithReplies);
+    const comment = await getCommentWithReplies(commentId);
+    res.status(200).json(comment);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -112,14 +130,6 @@ const getCommentsForQuestion = async (req, res) => {
     const comments = await Comment.find({ questionId }).populate(
       "replies.commenterId"
     );
-
-    // If no comments are found for the given question ID, return an error
-    if (!comments || comments.length === 0) {
-      console.log("No comments found for the question");
-      return res
-        .status(404)
-        .json({ error: "No comments found for the question" });
-    }
 
     // Return the comments
     res.status(200).json(comments);
