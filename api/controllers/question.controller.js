@@ -4,11 +4,17 @@ const fs = require("fs");
 
 const createQuestion = async (req, res) => {
   try {
-    const { text, topic } = req.body;
-    const newQuestion = new Question({ text, topic, uploaderId: req.user.id });
+    const { text, topic, images } = req.body;
+    // console.log(req.headers);
+    const newQuestion = new Question({
+      text,
+      topic,
+      uploaderId: req.headers["id"],
+      images,
+    });
 
     const savedQuestion = await newQuestion.save();
-    console.log("Question Created");
+    console.log(newQuestion);
     res.status(201).json(savedQuestion);
   } catch (error) {
     console.error(error);

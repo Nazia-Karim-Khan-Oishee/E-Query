@@ -14,10 +14,10 @@ const {
 
 const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
-router.post("/postQuestion", ensureAuthenticated, createQuestion);
-router.patch("/updateQuestionText", ensureAuthenticated, updateQuestionsText);
-router.patch("/updateQuestionTopic", ensureAuthenticated, updateQuestionsTopic);
-router.delete("/deleteQuestion", ensureAuthenticated, deleteQuestion);
+router.post("/postQuestion", createQuestion);
+router.patch("/updateQuestionText", updateQuestionsText);
+router.patch("/updateQuestionTopic", updateQuestionsTopic);
+router.delete("/deleteQuestion", deleteQuestion);
 router.get("/getAllQuestion", getAllQuestion);
 router.get("/readQuestion", readQuestion);
 router.get("/getAllTopics", getAllTopics);

@@ -7,6 +7,10 @@ const questionSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
+  images: {
+    type: [String],
+    required: false,
+  },
 });
 
 const Question = mongoose.model("Question", questionSchema);

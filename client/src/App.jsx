@@ -7,6 +7,8 @@ import Comments from "./pages/comments";
 import Login from "./components/Authentication/Login";
 import GetAllQuestions from "./pages/Questions/GetAllQuestions";
 import QuestionDetails from "./pages/Questions/QuestionDetails";
+import UploadQuestionForm from "./pages/Questions/UploadQuestionForm";
+import Profile from "./pages/profile/Profile";
 
 import "./App.css";
 function App() {
@@ -22,9 +24,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Signup />} />
             <Route path="/comments" element={<Comments />} />
-            {/* <Route path="/" element={<Login />} /> */}
+            <Route path="/profile" element={<Profile />} />
             <Route path="/getAllQuestion" element={<GetAllQuestions />} />
             <Route path="/questions/:id" element={<QuestionDetails />} />
+            <Route path="/createQuestion" element={<UploadQuestionForm />} />
           </Routes>
         </div>
       </BrowserRouter>
