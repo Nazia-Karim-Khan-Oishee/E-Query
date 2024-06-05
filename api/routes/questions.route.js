@@ -9,6 +9,7 @@ const {
   searchQuestionsByTopic,
   searchQuestions,
   getAllQuestion,
+  getAllTopics,
 } = require("../controllers/question.controller");
 
 const { ensureAuthenticated } = require("../middleware/auth.middleware");
@@ -19,14 +20,11 @@ router.patch("/updateQuestionTopic", ensureAuthenticated, updateQuestionsTopic);
 router.delete("/deleteQuestion", ensureAuthenticated, deleteQuestion);
 router.get("/getAllQuestion", getAllQuestion);
 router.get("/readQuestion", readQuestion);
+router.get("/getAllTopics", getAllTopics);
 router.get(
   "/searchQuestionbyTopic",
-  ensureAuthenticated,
+
   searchQuestionsByTopic
 );
-router.get(
-  "/searchQuestionbyTopicandDate",
-  ensureAuthenticated,
-  searchQuestions
-);
+router.get("/searchQuestionbyTopicandDate", searchQuestions);
 module.exports = router;
