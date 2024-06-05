@@ -15,6 +15,12 @@ import {
   faPen,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+
+import useBookmarkQuestion from "../../hooks/BookMark/useBookMarkQuestion";
+import useGetBookmarks from "../../hooks/BookMark/useGetBookMark";
+import useDeleteBookmark from "../../hooks/BookMark/useDeleteBookmark";
 
 const QuestionDetails = () => {
   const { id } = useParams();
@@ -26,7 +32,37 @@ const QuestionDetails = () => {
   const [reply, setReply] = useState("");
   const [editingComment, setEditingComment] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
+  const {
+    bookmarks,
+    loading: getBookmarkLoading,
+    error: getBookmarkError,
+    refresh: getBookmarks,
+    bookmarked,
+  } = useGetBookmarks();
+  const {
+    deleteBookmark,
+    loading: deleteLoading,
+    error: deleteError,
+    response,
+    message,
+  } = useDeleteBookmark();
 
+  const {
+    bookmarkQuestion: BookMarkeQuestion,
+    loading: bookmarkLoading,
+    error: BookmarkError,
+    response: BookmarkResponse,
+  } = useBookmarkQuestion();
+
+  const handleBookmarkQuestion = () => {
+    console.log("BOOKMARKid", id);
+    BookMarkeQuestion(id);
+    window.location.reload();
+  };
+  const handleDeleteBookmark = () => {
+    deleteBookmark(id);
+    window.location.reload();
+  };
   const userId = JSON.parse(localStorage.getItem("user"))._id;
   const {
     isLoading,
@@ -40,6 +76,14 @@ const QuestionDetails = () => {
   const { deleteComment } = useDeleteComment();
   const { postVotetoComment } = useVoteComment();
   const { updateVote } = useUpdateVote();
+  const {
+    bookmarkQuestion,
+    loading: bookmarking,
+    error: bookmarkError,
+    response: bookmarkResponse,
+    message: bookmarkMessage,
+  } = useBookmarkQuestion();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,6 +149,13 @@ const QuestionDetails = () => {
 
     fetchQuestionAndComments();
   }, [id]);
+
+  useEffect(() => {
+    getBookmarks();
+  }, []);
+
+  const isBookmarked = bookmarks.some((bookmark) => bookmark._id === id);
+  console.log("isBookmarked", isBookmarked);
 
   const fetchCommentWithReplies = async (commentId) => {
     try {
@@ -178,7 +229,24 @@ const QuestionDetails = () => {
     <div className="container mx-auto p-4">
       {question ? (
         <>
-          <h1 className="text-2xl font-bold mb-4">{question.text}</h1>
+          <div className="flex-inliine">
+            <h1 className="text-2xl font-bold mb-4">{question.text}</h1>
+            {isBookmarked ? (
+              <FontAwesomeIcon
+                icon={solidBookmark}
+                //BOOKMARKED
+                className="cursor-pointer"
+                onClick={handleDeleteBookmark}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={regularBookmark}
+                className="cursor-pointer"
+                onClick={handleBookmarkQuestion}
+              />
+            )}
+            {/* {BookmarkResponse && <p>{JSON.stringify(BookmarkResponse)}</p>} */}
+          </div>
           <p className="text-gray-600">Topic: {question.topic}</p>
           <p className="text-gray-600">Upvotes: {question.upvotes}</p>
           <p className="text-gray-600">Downvotes: {question.downvotes}</p>
@@ -206,7 +274,6 @@ const QuestionDetails = () => {
       ) : (
         <p>Question not found</p>
       )}
-
       <h2 className="text-xl font-bold mt-4 mb-2">Comments</h2>
       {comments && comments.length > 0 ? (
         (console.log("comments", comments),
