@@ -5,6 +5,9 @@ import useUpdateComment from "../../hooks/comments/useUpdateComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAddReply from "../../hooks/comments/useAddReply";
 import useDeleteComment from "../../hooks/comments/useDeleteComment";
+// import CommentWithVotes from "../../components/CommentwithVotes";
+import useVoteComment from "../../hooks/vote/useVoteComment";
+import useUpdateVote from "../../hooks/vote/useUpdateVote";
 import {
   faThumbsUp,
   faThumbsDown,
@@ -35,6 +38,8 @@ const QuestionDetails = () => {
   const { updateComment } = useUpdateComment();
   const { addReply } = useAddReply();
   const { deleteComment } = useDeleteComment();
+  const { postVotetoComment } = useVoteComment();
+  const { updateVote } = useUpdateVote();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -90,6 +95,7 @@ const QuestionDetails = () => {
         );
 
         setComments(commentsWithReplies);
+        console.log("commentsWithReplies", comment);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -159,6 +165,15 @@ const QuestionDetails = () => {
     return <p>{error}</p>;
   }
 
+  const handleUpvote = async (commentId) => {
+    postVotetoComment(commentId, "upvote");
+    window.location.reload();
+  };
+  const handleDownvote = async (commentId) => {
+    updateVote(commentId);
+    console.log("DOWNVOTE", commentId);
+    window.location.reload();
+  };
   return (
     <div className="container mx-auto p-4">
       {question ? (
@@ -219,11 +234,13 @@ const QuestionDetails = () => {
                       <FontAwesomeIcon
                         icon={faThumbsUp}
                         className="ml-4 cursor-pointer"
+                        onClick={() => handleUpvote(comment._id)}
                       />
                       {comment.upvotes}
                       <FontAwesomeIcon
                         icon={faThumbsDown}
                         className="ml-4 cursor-pointer"
+                        onClick={() => handleDownvote(comment._id)}
                       />
                       {comment.downvotes}
                       {comment.commenterId === userId && (
@@ -290,11 +307,13 @@ const QuestionDetails = () => {
                               <FontAwesomeIcon
                                 icon={faThumbsUp}
                                 className="ml-4 cursor-pointer"
+                                onClick={() => handleUpvote(reply._id)}
                               />
                               {reply.upvotes}{" "}
                               <FontAwesomeIcon
                                 icon={faThumbsDown}
                                 className="ml-4 cursor-pointer"
+                                onClick={() => handleDownvote(reply._id)}
                               />
                               {reply.downvotes}
                               {reply.commenterId === userId && (
