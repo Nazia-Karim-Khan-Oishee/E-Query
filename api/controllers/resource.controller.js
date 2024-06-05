@@ -4,15 +4,23 @@ const fs = require("fs");
 
 const createResource = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file provided" });
-    }
-    const pdf = req.file.filename;
-    const { text } = req.body;
+    let pdf = ""; // Initialize with an empty string
 
+    if (req.file) {
+      // PDF file provided
+      pdf = req.file.filename;
+    }
+
+    const { text, images } = req.body;
+
+    console.log(req.body);
+    const parsedImages = images ? JSON.parse(images) : [];
+
+    console.log(parsedImages);
     const newResource = new Resource({
-      uploader: req.user.id,
+      uploader: req.headers["id"],
       pdf: pdf,
+      images: parsedImages,
       text: text,
     });
 
@@ -21,7 +29,7 @@ const createResource = async (req, res) => {
 
     res.status(200).json({ newResource });
   } catch (error) {
-    console.log("Something went wrong");
+    console.log({ error });
     res.status(500).json({ error: error.message });
   }
 };
@@ -147,10 +155,21 @@ const getResource = async (req, res, next) => {
   }
 };
 
+const getAllResource = async (req, res, next) => {
+  try {
+    const existingResources = await Resource.find();
+
+    res.status(200).json({ existingResources });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 module.exports = {
   createResource,
   updateText,
   updatePDF,
   getResource,
   deleteResource,
+  getAllResource,
 };
