@@ -1,13 +1,15 @@
-import Signup from "./components/Authentication/Signup";
-import Navbar from "./components/Navbar";
-
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Comments from "./pages/comments";
+import Navbar from "./components/navbar";
+import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
+import ResetPassword from "./components/Authentication/ResetPassword";
+import EnterToken from "./components/Authentication/EnterToken";
 import GetAllQuestions from "./pages/Questions/GetAllQuestions";
 import QuestionDetails from "./pages/Questions/QuestionDetails";
 import UploadQuestionForm from "./pages/Questions/UploadQuestionForm";
+import ChangePassword from "./components/Authentication/ChangePassword";
 import Profile from "./pages/profile/Profile";
 import ResourceForm from "./pages/Resource/UploadResourceForm";
 import GetQuestions from "./pages/profile/GetQuestions";
@@ -15,8 +17,6 @@ import GetAllResources from "./pages/Resource/getAllResources";
 import GetResources from "./pages/profile/GetResources";
 
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
@@ -33,6 +33,9 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
+            <Route path="/resetPassword" element={<ResetPassword />} />
+            <Route path="/enterToken" element={<EnterToken />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
             <Route path="/comments" element={<Comments />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/getQuestions" element={<GetQuestions />} />
