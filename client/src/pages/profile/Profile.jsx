@@ -69,7 +69,10 @@ const Profile = () => {
   return (
     <div className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-12">
       <div className="p-6">
-        <h2 className="text-xl font-bold mb-4">User Profile</h2>
+        <div className="flex">
+          <h2 className="text-xl font-bold mb-4 mr-5">User Profile</h2>
+          <button className="btn w-50">Update Profile</button>
+        </div>
         <div className="mb-4">
           <img
             src={
