@@ -27,4 +27,11 @@ router.get(
   searchQuestionsByTopic
 );
 router.get("/searchQuestionbyTopicandDate", searchQuestions);
+router.get(
+  "/searchQuestionbyTopicandDate",
+  ensureAuthenticated,
+  searchQuestions
+);
+
+
 module.exports = router;
