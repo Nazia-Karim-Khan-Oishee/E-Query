@@ -5,6 +5,7 @@ const Question = require("../datamodels/Question.model");
 const Comment = require("../datamodels/Comment.model");
 
 const bcrypt = require("bcrypt");
+const Bookmark = require("../datamodels/Bookmark.model");
 
 const updatePasssword = async (req, res, next) => {
   errors = [];
@@ -116,25 +117,20 @@ const getProfileImage = async (req, res) => {
 
 const updateProfileInfo = async (req, res) => {
   try {
-    const name = req.body.name;
-    const phone = req.body.phone;
-    const token = req.cookies.jwt;
-    let userId;
-    try {
-      const decodedToken = jwt.verify(token, process.env.SECRET);
-      userId = decodedToken.id;
-    } catch (err) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
+    const { username, phone, userId } = req.body;
     const user = await User.findOne({ _id: userId });
-    if (name) {
-      user.name = name;
-    }
-    if (phone) {
-      user.phone = phone;
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    } else {
+      if (username) {
+        user.username = username;
+      }
+      if (phone) {
+        user.phone = phone;
+      }
     }
     await user.save();
-    res.json({ message: "Name updated successfully" });
+    res.json({ message: "Profile updated successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -248,6 +244,20 @@ const getCommentsByUser = async (req, res) => {
   }
 };
 
+const getBookMarksByUser = async (req, res) => {
+  try {
+    const userId = req.headers["id"];
+
+    const userBookmark = await Bookmark.find({ userId: userId });
+
+    console.log("Got Bookmark posted by the user");
+    console.log(userBookmark);
+    res.status(200).json(userBookmark);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 module.exports = {
   updatePasssword,
   postProfileImage,
@@ -259,4 +269,5 @@ module.exports = {
   getQuestionsByUser,
   deleteProfileImage,
   getCommentsByUser,
+  getBookMarksByUser,
 };
