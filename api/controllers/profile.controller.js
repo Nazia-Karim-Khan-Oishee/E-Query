@@ -207,12 +207,6 @@ const getResourcesByUser = async (req, res) => {
 
     const userResources = await Resource.find({ uploader: userId });
 
-    if (!userResources || userResources.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No resources found for the user." });
-    }
-
     console.log("Got Resources posted by the user");
 
     res.status(200).json(userResources);

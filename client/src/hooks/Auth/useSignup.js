@@ -6,7 +6,7 @@ export const useSignup = () => {
   const [loading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = async (username, email, password, phone, address) => {
+  const signup = async (username, email, password, phone) => {
     setIsLoading(true);
     setError(null);
 
@@ -18,8 +18,8 @@ export const useSignup = () => {
         email: email,
         password: password,
         phone: phone,
-        address: address,
       }),
+      credentials: "include",
     });
     const data = await response.json();
 

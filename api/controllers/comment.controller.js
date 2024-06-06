@@ -1,14 +1,12 @@
 const Question = require("../datamodels/Question.model");
 const Comment = require("../datamodels/Comment.model");
 
-// const path = require("path");
-// const fs = require("fs");
-
 const createfirstComment = async (req, res) => {
   try {
-    const { questionId } = req.query;
+    const { questionId } = req.body;
     const { comment } = req.body;
-
+    const id = req.headers["id"];
+    console.log("questionId", questionId);
     const questionExists = await Question.exists({ _id: questionId });
     if (!questionExists) {
       console.log("Question not found");
@@ -18,11 +16,12 @@ const createfirstComment = async (req, res) => {
     const newComment = new Comment({
       questionId,
       comment: comment,
-      commenterId: req.user.id,
+      commenterId: id,
     });
 
     const savedComment = await newComment.save();
     console.log("Comment posted");
+    console.log("savedComment", savedComment.commenterId);
     res.status(201).json(savedComment);
   } catch (error) {
     console.error(error);
@@ -33,22 +32,23 @@ const createfirstComment = async (req, res) => {
 const addReply = async (req, res) => {
   try {
     const { reply } = req.body;
-    const { commentId } = req.query; // Extract commentId from query parameters
-
+    const { commentId } = req.query;
+    console.log("commentId", commentId);
     const newReply = new Comment({
       comment: reply,
-      commenterId: req.user.id,
+      commenterId: req.headers["id"],
     });
 
     const savedReply = await newReply.save();
-
+    console.log("Reply posted");
+    console.log("savedReply._id", savedReply._id);
     // Find the parent comment and push the reply's _id to its replies array
     const parentComment = await Comment.findByIdAndUpdate(
       commentId,
       { $push: { replies: savedReply._id } },
       { new: true }
     );
-
+    console.log("parentComment", parentComment);
     return res.status(201).json(savedReply);
   } catch (error) {
     console.error(error);
@@ -56,36 +56,54 @@ const addReply = async (req, res) => {
   }
 };
 
+// const getCommentAndReplies = async (req, res) => {
+//   try {
+//     const { commentId } = req.query;
+
+//     const getCommentWithReplies = async (commentId) => {
+//       const comment = await Comment.findById(commentId).populate(
+//         "replies.commenterId"
+//       );
+
+//       if (!comment) {
+//         return null;
+//       }
+
+//       const nestedReplies = await Promise.all(
+//         comment.replies.map((reply) => getCommentWithReplies(reply._id))
+//       );
+
+//       comment.replies = nestedReplies;
+
+//       return comment;
+//     };
+
+//     const commentWithReplies = await getCommentWithReplies(commentId);
+
+//     if (!commentWithReplies) {
+//       console.log("Comment not found");
+//       return res.status(404).json({ error: "Comment not found" });
+//     }
+
+//     res.status(200).json(commentWithReplies);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// };
 const getCommentAndReplies = async (req, res) => {
   try {
-    const commentId = req.query.commentId;
+    const { commentId } = req.query;
 
     const getCommentWithReplies = async (commentId) => {
       const comment = await Comment.findById(commentId).populate(
         "replies.commenterId"
       );
-
-      if (!comment) {
-        return null;
-      }
-
-      const nestedReplies = await Promise.all(
-        comment.replies.map((reply) => getCommentWithReplies(reply._id))
-      );
-
-      comment.replies = nestedReplies;
-
       return comment;
     };
 
-    const commentWithReplies = await getCommentWithReplies(commentId);
-
-    if (!commentWithReplies) {
-      console.log("Comment not found");
-      return res.status(404).json({ error: "Comment not found" });
-    }
-
-    res.status(200).json(commentWithReplies);
+    const comment = await getCommentWithReplies(commentId);
+    res.status(200).json(comment);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -94,9 +112,9 @@ const getCommentAndReplies = async (req, res) => {
 
 const getSingleComment = async (req, res) => {
   try {
-    const commentId = req.query.commentId;
-    const comment = await Comment.findById(commentId);
-
+    const commentId = req.query.commentId; // Extract commentId from req.query
+    const comment = await Comment.findById(commentId); // Pass commentId to findById method
+    console.log("comment", comment);
     res.status(200).json(comment);
   } catch (error) {
     console.error(error);
@@ -113,14 +131,6 @@ const getCommentsForQuestion = async (req, res) => {
       "replies.commenterId"
     );
 
-    // If no comments are found for the given question ID, return an error
-    if (!comments || comments.length === 0) {
-      console.log("No comments found for the question");
-      return res
-        .status(404)
-        .json({ error: "No comments found for the question" });
-    }
-
     // Return the comments
     res.status(200).json(comments);
   } catch (error) {
@@ -133,15 +143,12 @@ const updateComment = async (req, res) => {
   try {
     const { comment } = req.body;
     const commentID = req.query.commentID;
-
+    console.log("comment UPDATE");
     const existingComment = await Comment.findById(commentID);
 
-    if (!existingComment) {
-      console.log("Comment not found");
-      return res.status(404).json({ error: "Comment not found" });
-    }
+    console.log("existingComment", existingComment.commenterId);
 
-    if (existingComment.commenterId !== req.user.id) {
+    if (existingComment.commenterId !== req.headers["id"]) {
       console.log("Unauthorized");
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -170,7 +177,7 @@ const deleteComment = async (req, res) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
-    if (existingComment.commenterId !== req.user.id) {
+    if (existingComment.commenterId !== req.headers["id"]) {
       console.log("Unauthorized");
       return res.status(401).json({ error: "Unauthorized" });
     }

@@ -15,7 +15,7 @@ const Login = () => {
     <div className="flex min-h-full flex-col mt-20 justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h1 className="text-center text-4xl font-bold leading-9 tracking-tight text-blue-700">
-          Astarion
+          E-Query
         </h1>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Log in to your account
@@ -28,8 +28,7 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
+                className="block text-sm font-medium leading-6 text-gray-900">
                 Email or Username
               </label>
             </div>
@@ -50,15 +49,13 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
+                className="block text-sm font-medium leading-6 text-gray-900">
                 Password
               </label>
               <div className="text-sm">
                 <a
                   href="/resetPassword"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
+                  className="font-semibold text-indigo-600 hover:text-indigo-500">
                   Forgot password?
                 </a>
               </div>
@@ -82,8 +79,7 @@ const Login = () => {
               disabled={isLoading}
               type="submit"
               onClick={handleSubmit}
-              className="btn flex w-56 justify-center rounded-md px-3 py-1.4 text-sm font-semibold leading-6"
-            >
+              className="btn flex w-56 justify-center rounded-md px-3 py-1.4 text-sm font-semibold leading-6">
               Sign in
             </button>
             {error && <div className="error">{error}</div>}

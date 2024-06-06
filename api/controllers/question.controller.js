@@ -4,11 +4,17 @@ const fs = require("fs");
 
 const createQuestion = async (req, res) => {
   try {
-    const { text, topic } = req.body;
-    const newQuestion = new Question({ text, topic, uploaderId: req.user.id });
+    const { text, topic, images } = req.body;
+    // console.log(req.headers);
+    const newQuestion = new Question({
+      text,
+      topic,
+      uploaderId: req.headers["id"],
+      images,
+    });
 
     const savedQuestion = await newQuestion.save();
-    console.log("Question Created");
+    console.log(newQuestion);
     res.status(201).json(savedQuestion);
   } catch (error) {
     console.error(error);
@@ -149,7 +155,8 @@ const searchQuestionsByTopic = async (req, res) => {
 
     const questionsTextOnly = questions.map((question) => question.text);
     console.log("Read questions.");
-    res.status(200).json(questionsTextOnly);
+    console.log(questions);
+    res.status(200).json(questions);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -200,6 +207,27 @@ const searchQuestions = async (req, res) => {
   }
 };
 
+
+const getAllTopics = async (req, res) => {
+  try {
+    // Fetch all questions from the database
+    const questions = await Question.find({}, "topic");
+
+    // Extract topics from questions
+    console.log("Topics fetched");
+    const topics = questions.map((question) => question.topic);
+
+    // Remove duplicate topics
+    const uniqueTopics = Array.from(new Set(topics));
+
+    res.json(uniqueTopics);
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching topics:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getQuestions = async (req, res) => {
   try {
     const start = parseInt(req.query.start, 10) || 0;
@@ -236,6 +264,6 @@ module.exports = {
   searchQuestions,
   readQuestion,
   searchQuestionsByTopic,
-  getQuestions,
-  getNumberOfTotalQuestions,
+  getAllQuestion,
+  getAllTopics,
 };
