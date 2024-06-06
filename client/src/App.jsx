@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Comments from "./pages/comments";
 import ProtectedRoute from "./protectedRoutes";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
 import ResetPassword from "./components/Authentication/ResetPassword";

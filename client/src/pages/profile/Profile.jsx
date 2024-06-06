@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserProfile } from "../../hooks/profile/useUserProfile";
 
 const Profile = () => {
