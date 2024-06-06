@@ -153,20 +153,20 @@ const deleteResource = async (req, res, next) => {
   console.log(resourceID);
 
   const existingResource = await Resource.findById(resourceID);
+  console.log(existingResource);
+  // if (!existingResource) {
+  //   console.log("No resource found");
+  //   return res.status(404).json({ error: "Resource not found" });
+  // }
 
-  if (!existingResource) {
-    console.log("No resource found");
-    return res.status(404).json({ error: "Resource not found" });
-  }
-
-  if (existingResource.uploader !== req.user.id) {
-    console.log("Unauthorized");
-    return res.status(400).json({ error: "Unauthorized" });
-  }
+  //   console.log("Unauthorized");
+  //   return res.status(400).json({ error: "Unauthorized" });
+  // }
 
   try {
-    await Resource.findByIdAndDelete(resourceID);
-
+    if (existingResource.uploader) {
+      await Resource.findByIdAndDelete(resourceID);
+    }
     console.log("Resource Deleted ");
 
     res.json({ message: "Resource Deleted" });

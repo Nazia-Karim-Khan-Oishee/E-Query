@@ -210,7 +210,7 @@ const getResourcesByUser = async (req, res) => {
     const userResources = await Resource.find({ uploader: userId });
 
     console.log("Got Resources posted by the user");
-
+    console.log(userResources);
     res.status(200).json(userResources);
   } catch (error) {
     console.error(error);

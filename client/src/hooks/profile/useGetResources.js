@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const useGetResource = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [Resource, setResource] = useState(null);
+  const [Resource, setResource] = useState([]);
 
-  const getResource = async () => {
+  const getResource = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -20,7 +20,7 @@ const useGetResource = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to upload question");
+        throw new Error("Failed to fetch resources");
       }
 
       const result = await response.json();
@@ -31,7 +31,7 @@ const useGetResource = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return { getResource, loading, error, Resource };
 };
