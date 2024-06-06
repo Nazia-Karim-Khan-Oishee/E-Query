@@ -139,7 +139,9 @@ const updateUserName = async (req, res, next) => {
 
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id, "-password");
+    const id = req.headers["user-id"];
+    const user = await User.findById(id, "-password");
+    console.log(user);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

@@ -1,6 +1,5 @@
-
 import Signup from "./components/Authentication/Signup";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar";
 
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -24,7 +23,7 @@ function App() {
   return (
     <>
       <div>
-        <h1 className="text-black text-6xl">Hello World</h1>
+        <Navbar />
       </div>
       <BrowserRouter>
         <div className="Components">
@@ -42,7 +41,6 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-    </div>
     </>
   );
 }
