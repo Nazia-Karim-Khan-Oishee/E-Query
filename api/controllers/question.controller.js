@@ -1,14 +1,21 @@
 const Question = require("../datamodels/Question.model");
 const path = require("path");
 const fs = require("fs");
+const Bookmark = require("../datamodels/Bookmark.model");
 
 const createQuestion = async (req, res) => {
   try {
-    const { text, topic } = req.body;
-    const newQuestion = new Question({ text, topic, uploaderId: req.user.id });
+    const { text, topic, images } = req.body;
+    // console.log(req.headers);
+    const newQuestion = new Question({
+      text,
+      topic,
+      uploaderId: req.headers["id"],
+      images,
+    });
 
     const savedQuestion = await newQuestion.save();
-    console.log("Question Created");
+    console.log(newQuestion);
     res.status(201).json(savedQuestion);
   } catch (error) {
     console.error(error);
@@ -80,18 +87,19 @@ const updateQuestionsTopic = async (req, res) => {
 
 const deleteQuestion = async (req, res) => {
   try {
-    const questionID = req.query.questionID;
+    const { questionID } = req.query;
 
     const existingQuestion = await Question.findById(questionID);
-    if (!existingQuestion) {
-      console.log("Question not found");
-      return res.status(404).json({ error: "Question not found" });
-    }
 
-    if (existingQuestion.uploaderId !== req.user.id) {
-      console.log("Unauthorized");
-      return res.status(401).json({ error: "Unauthorized" });
+    const bookmark = await Bookmark.findOne({ questionId: questionID });
+    if (bookmark) {
+      console.log("Bookmark found");
+      await bookmark.deleteOne();
     }
+    // if (existingQuestion.uploaderId !== req.user.id) {
+    //   console.log("Unauthorized");
+    //   return res.status(401).json({ error: "Unauthorized" });
+    // }
 
     const deletedQuestion = await Question.findByIdAndDelete(questionID);
 
@@ -149,7 +157,8 @@ const searchQuestionsByTopic = async (req, res) => {
 
     const questionsTextOnly = questions.map((question) => question.text);
     console.log("Read questions.");
-    res.status(200).json(questionsTextOnly);
+    console.log(questions);
+    res.status(200).json(questions);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -200,6 +209,54 @@ const searchQuestions = async (req, res) => {
   }
 };
 
+const getAllTopics = async (req, res) => {
+  try {
+    // Fetch all questions from the database
+    const questions = await Question.find({}, "topic");
+
+    // Extract topics from questions
+    console.log("Topics fetched");
+    const topics = questions.map((question) => question.topic);
+
+    // Remove duplicate topics
+    const uniqueTopics = Array.from(new Set(topics));
+
+    res.json(uniqueTopics);
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching topics:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getQuestions = async (req, res) => {
+  try {
+    const start = parseInt(req.query.start, 10) || 0;
+    const end = parseInt(req.query.end, 10) || 10;
+    const limit = end - start;
+
+    const questions = await Question.find()
+      .sort({ timestamp: -1 }) // Sort by timestamp in descending order
+      .skip(start)
+      .limit(limit);
+
+    res.status(200).json(questions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getNumberOfTotalQuestions = async (req, res) => {
+  try {
+    const count = await Question.estimatedDocumentCount(); // or use Question.countDocuments() if you prefer
+    res.status(200).json(count);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   createQuestion,
   updateQuestionsText,
@@ -209,4 +266,5 @@ module.exports = {
   readQuestion,
   searchQuestionsByTopic,
   getAllQuestion,
+  getAllTopics,
 };

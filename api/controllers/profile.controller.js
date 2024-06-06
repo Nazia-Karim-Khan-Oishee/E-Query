@@ -139,7 +139,9 @@ const updateUserName = async (req, res, next) => {
 
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id, "-password");
+    const id = req.headers["user-id"];
+    const user = await User.findById(id, "-password");
+    console.log(user);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -203,18 +205,12 @@ const deleteProfileImage = async (req, res, next) => {
 
 const getResourcesByUser = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.headers["id"];
 
     const userResources = await Resource.find({ uploader: userId });
 
-    if (!userResources || userResources.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No resources found for the user." });
-    }
-
     console.log("Got Resources posted by the user");
-
+    console.log(userResources);
     res.status(200).json(userResources);
   } catch (error) {
     console.error(error);
@@ -224,21 +220,16 @@ const getResourcesByUser = async (req, res) => {
 
 const getQuestionsByUser = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.headers["id"];
 
     const userQuestions = await Question.find({ uploaderId: userId });
-
-    if (!userQuestions || userQuestions.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No resources found for the user." });
-    }
 
     const questionTexts = userQuestions.map((question) => question.text);
 
     console.log("Got Questions posted by the user");
+    console.log(questionTexts);
 
-    res.status(200).json(questionTexts);
+    res.status(200).json(userQuestions);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

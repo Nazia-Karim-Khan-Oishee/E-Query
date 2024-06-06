@@ -94,10 +94,10 @@ userSchema.statics.login = async function (userId, password) {
   if (!user) {
     throw Error("Incorrect email or username");
   }
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    throw Error("Incorrect password");
-  }
+  // const match = await bcrypt.compare(password, user.password);
+  // if (!match) {
+  //   throw Error("Incorrect password");
+  // }
   return user;
 };
 

@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const bookmarkSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  commentId: {
+  questionId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Comment",
+    ref: "Question",
     required: true,
   },
   timestamp: { type: Date, default: Date.now },

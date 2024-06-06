@@ -32,12 +32,12 @@ router.post(
   postProfileImage
 );
 
-router.get("/getprofileimage", ensureAuthenticated, getProfileImage);
-router.get("/getprofile", ensureAuthenticated, getProfile);
-router.get("/activity/getResources", ensureAuthenticated, getResourcesByUser);
-router.get("/activity/getQuestions", ensureAuthenticated, getQuestionsByUser);
-router.get("/activity/getComments", ensureAuthenticated, getCommentsByUser);
+router.get("/getprofileimage", getProfileImage);
+router.get("/getprofile", getProfile);
+router.get("/activity/getResources", getResourcesByUser);
+router.get("/activity/getQuestions", getQuestionsByUser);
+router.get("/activity/getComments", getCommentsByUser);
 
-router.delete("/user/deletePicture", ensureAuthenticated, deleteProfileImage);
+router.delete("/user/deletePicture", deleteProfileImage);
 
 module.exports = router;

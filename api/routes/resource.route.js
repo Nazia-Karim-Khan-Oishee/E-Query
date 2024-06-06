@@ -6,36 +6,27 @@ const {
   updateText,
   deleteResource,
   getResource,
+  getAllResource,
+  searchResources,
+  extractTextAndSummarize,
 } = require("../controllers/resource.controller");
 
 const { uploadResource } = require("../middleware/pdf.middleware");
-const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
-router.post(
-  "/postResource",
-  ensureAuthenticated,
-  uploadResource.single("pdf"),
-  createResource
-);
+router.post("/postResource", uploadResource.single("pdf"), createResource);
 
-router.patch(
-  "/resource/updateText/:resourceId",
-  ensureAuthenticated,
-  updateText
-);
+router.patch("/resource/updateText/:resourceId", updateText);
 router.patch(
   "/resource/updatePDF/:resourceId",
-  ensureAuthenticated,
   uploadResource.single("pdf"),
   updatePDF
 );
 
-router.delete(
-  "/deleteResource/:resourceId",
-  ensureAuthenticated,
-  deleteResource
-);
+router.delete("/deleteResource/:resourceId", deleteResource);
 
-router.get("/getresource/:resourceId", ensureAuthenticated, getResource);
+router.get("/getresource/:resourceId", getResource);
+router.get("/getAllResource", getAllResource);
+router.get("/searchResources", searchResources);
+router.post("/extractTextAndSummarize", extractTextAndSummarize);
 
 module.exports = router;

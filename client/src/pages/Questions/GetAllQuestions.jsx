@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SearchBar from "../../components/SearchBar";
+import useQuestionAPI from "../../hooks/Questions/useSearchQuestion";
+import useGetTopics from "../../hooks/Questions/useGetTopics";
+import parse from "html-react-parser";
+
 const GetAllQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -24,36 +30,98 @@ const GetAllQuestions = () => {
     fetchQuestions();
   }, []);
 
+  const {
+    executeSearch,
+    loading: questionLoading,
+    error: questionError,
+    questions: searchQuestions,
+  } = useQuestionAPI();
+
+  const handleSearch = async (searchTerm) => {
+    setSearchTerm(searchTerm);
+    try {
+      console.log("Searching for:", searchTerm);
+      executeSearch(searchTerm);
+
+      setSearchResults(searchQuestions);
+      if (questionError) {
+        setError(questionError);
+        console.error("Error searching questions:", questionError);
+      }
+    } catch (error) {
+      console.error("Error searching questions:", error);
+    }
+  };
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="text-4xl align-middle">Loading...</p>;
   }
 
   if (error) {
     return <p>{error}</p>;
   }
 
+  const highlightSearchTerm = (text, term) => {
+    const regex = new RegExp(`(${term})`, "gi");
+    const highlightedText = text.replace(
+      regex,
+      "<span class='bg-yellow-200 font-bold'>$1</span>"
+    );
+    return highlightedText;
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Questions</h1>
-      <ul className="space-y-4">
-        {questions.map((question) => (
-          <li key={question._id} className="p-4 border rounded-lg shadow-md">
-            <li key={question._id} className="p-4 border rounded-lg shadow-md">
-              <Link
-                to={`/questions/${question._id}`}
-                className="text-xl font-semibold text-blue-500">
-                {question.text}
-              </Link>
-            </li>
-            <p className="text-gray-600">Topic: {question.topic}</p>
-            <p className="text-gray-400 text-sm">
-              Uploaded on: {new Date(question.timestamp).toLocaleString()}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <h1>Search Questions</h1>
+        <SearchBar onSearch={handleSearch} />
+        {searchResults.length > 0 && (
+          <ul className="space-y-4">
+            {searchResults.map((question) => (
+              <li
+                key={question._id}
+                className="p-4 border rounded-lg shadow-md">
+                <Link
+                  to={`/questions/${question._id}`}
+                  className="text-xl font-semibold text-blue-500">
+                  {question.text}
+                </Link>
+                <p className="text-gray-600">
+                  Topic:{" "}
+                  {parse(highlightSearchTerm(question.topic, searchTerm))}
+                </p>
+                {/* {question.topic} */}
+                <p className="text-gray-400 text-sm">
+                  Uploaded on: {new Date(question.timestamp).toLocaleString()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {searchResults.length === 0 && (
+        <div>
+          <h1 className="text-2xl font-bold mb-4">Questions</h1>
+          <ul className="space-y-4">
+            {questions.map((question) => (
+              <li
+                key={question._id}
+                className="p-4 border rounded-lg shadow-md">
+                <Link
+                  to={`/questions/${question._id}`}
+                  className="text-xl font-semibold text-blue-500">
+                  {question.text}
+                </Link>
+                <p className="text-gray-600">Topic: {question.topic}</p>
+                <p className="text-gray-400 text-sm">
+                  Uploaded on: {new Date(question.timestamp).toLocaleString()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
-
 export default GetAllQuestions;

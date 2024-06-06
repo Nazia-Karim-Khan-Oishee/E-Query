@@ -13,6 +13,13 @@ const ResouceSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+
+  images: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
 });
 
 const Resource = mongoose.model("Resource", ResouceSchema);

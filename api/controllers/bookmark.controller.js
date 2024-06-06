@@ -1,27 +1,30 @@
 const express = require("express");
+const Question = require("../datamodels/Question.model");
 const Bookmark = require("../datamodels/Bookmark.model");
 
-const bookmarkComment = async (req, res) => {
+const bookmarkQuestion = async (req, res) => {
   try {
-    const { commentId } = req.query;
-    const userId = req.user.id;
+    const { questionId } = req.query;
+    const userId = req.headers["id"];
 
-    const existingBookmark = await Bookmark.findOne({
+    console.log("Bookmarking question", questionId);
+    const existingBookmark = await Question.findOne({
       userId,
-      commentId,
+      questionId,
     });
 
     if (existingBookmark) {
+      console.log("Question is already bookmarked");
       return res.send("Comment is already bookmarked");
     }
 
     const newBookmark = new Bookmark({
       userId,
-      commentId,
+      questionId,
     });
 
     await newBookmark.save();
-    console.log("Comment bookmarked successfully");
+    console.log("Question bookmarked successfully");
 
     res.status(200).json({ newBookmark });
   } catch (error) {
@@ -32,12 +35,12 @@ const bookmarkComment = async (req, res) => {
 
 const Deletebookmark = async (req, res) => {
   try {
-    const { commentId } = req.query;
-    const userId = req.user.id;
+    const { questionId } = req.query;
+    const userId = req.headers["id"];
 
     const deletedBookmark = await Bookmark.findOneAndDelete({
       userId,
-      commentId,
+      questionId,
     });
 
     if (deletedBookmark) {
@@ -54,29 +57,25 @@ const Deletebookmark = async (req, res) => {
 
 const getBookmarks = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.headers["id"];
 
     // Find all bookmarks for the specified user, populate the associated comments
-    const userBookmarks = await Bookmark.find({ userId }).populate("commentId");
-
-    if (!userBookmarks || userBookmarks.length === 0) {
-      return res
-        .status(404)
-        .json({ response: "No bookmarks found for the user." });
-    }
+    const userBookmarks = await Bookmark.find({ userId }).populate(
+      "questionId"
+    );
 
     // Extract text from each comment, handling null cases
-    const commentTexts = userBookmarks.map((bookmark) =>
-      bookmark.commentId ? bookmark.commentId.comment : null
+    const questionIds = userBookmarks.map((bookmark) =>
+      bookmark.questionId ? bookmark.questionId : null
     );
 
     console.log("Got Bookmarks with Comments");
 
-    res.status(200).json(commentTexts);
+    res.status(200).json(questionIds);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-module.exports = { bookmarkComment, Deletebookmark, getBookmarks };
+module.exports = { bookmarkQuestion, Deletebookmark, getBookmarks };
