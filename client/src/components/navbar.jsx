@@ -24,49 +24,37 @@ export default function Component() {
             <h1 className="navbar-brand text-white ml-6">E-Query</h1>
           </Navbar.Brand>
         </div>
-        <div>
-          <Navbar.Collapse>
-            {user ? (
-              <ul className="flex flex-row">
-                <li>
-                  <Navbar.Link href="/" className="text-white ml-6">
-                    Products
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/profile">
-                    Profile
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/addProduct">
-                    Sell
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/messages">
-                    Messages
-                  </Navbar.Link>
-                </li>
-              </ul>
-            ) : (
-              <ul className="flex flex-row">
-                <li>
-                  <Navbar.Link href="/signup" className="text-white ml-6">
-                    Signup
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link href="/login" className="text-white ml-6">
-                    Login
-                  </Navbar.Link>
-                </li>
-              </ul>
-            )}
-          </Navbar.Collapse>
-        </div>
         {user && (
-          <div>
+          <div className="flex justify-between">
+            <ul className="flex flex-row">
+              <li>
+                <Navbar.Link className="ml-4 text-white" href="/profile">
+                  Profile
+                </Navbar.Link>
+              </li>
+              <li>
+                <Navbar.Link href="/getAllQuestion" className="text-white ml-6">
+                  Questions
+                </Navbar.Link>
+              </li>
+
+              <li>
+                <Navbar.Link
+                  className="ml-4 text-white"
+                  href="/getAllResources"
+                >
+                  Resources
+                </Navbar.Link>
+              </li>
+              <li>
+                <Navbar.Link
+                  className="ml-4 text-white"
+                  href="/profile/getBookmark"
+                >
+                  BookMarks
+                </Navbar.Link>
+              </li>
+            </ul>
             <button
               className="bg-red-600 text-white px-4 py-2 ml-6  rounded-md"
               onClick={handleLogout}

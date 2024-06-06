@@ -17,14 +17,13 @@ function SearchBar({ onSearch }) {
   return (
     <form onSubmit={handleSubmit}>
       <TextInput
+        color="gray-600"
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Search..."
       />
-      <button class="h-10 px-5 my-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">
-        Search
-      </button>
+      <button className="btn mt-5">Search</button>
     </form>
   );
 }

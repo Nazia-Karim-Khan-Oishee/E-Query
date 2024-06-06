@@ -20,7 +20,7 @@ const Signup = () => {
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
         <h1 className="text-center text-4xl font-bold leading-9 tracking-tight text-blue-700">
-          Astarion
+          E-Query
         </h1>
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign Up
@@ -151,6 +151,17 @@ const Signup = () => {
             {error && <div className="error text-red-400">{error}</div>}
           </div>
         </form>
+        <div>
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+            >
+              Sign in
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

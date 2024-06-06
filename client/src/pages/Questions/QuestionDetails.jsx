@@ -325,10 +325,15 @@ const QuestionDetails = () => {
                               className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
                             />
                             <button
-                              onClick={() => handleSaveClick(comment._id)}>
+                              className="btn"
+                              onClick={() => handleSaveClick(comment._id)}
+                            >
                               Save
                             </button>
-                            <button onClick={() => setEditingComment(null)}>
+                            <button
+                              className="btn"
+                              onClick={() => setEditingComment(null)}
+                            >
                               Cancel
                             </button>
                           </>
@@ -383,7 +388,9 @@ const QuestionDetails = () => {
                               })
                             }
                           />
-                          <button type="submit">Reply</button>
+                          <button className="btn ml-3" type="submit">
+                            Reply
+                          </button>
                         </form>
                         {comment.replies &&
                           comment.replies.length > 0 &&
@@ -404,15 +411,19 @@ const QuestionDetails = () => {
                                             className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
                                           />
                                           <button
+                                            className="btn"
                                             onClick={() =>
                                               handleSaveClick(reply._id)
-                                            }>
+                                            }
+                                          >
                                             Save
                                           </button>
                                           <button
+                                            className="btn"
                                             onClick={() =>
                                               setEditingComment(null)
-                                            }>
+                                            }
+                                          >
                                             Cancel
                                           </button>
                                         </>
@@ -479,7 +490,9 @@ const QuestionDetails = () => {
           placeholder="Add a comment"
           onChange={(e) => setComment(e.target.value)}
         />
-        <button type="submit">Submit</button>
+        <button className="btn ml-3" type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
