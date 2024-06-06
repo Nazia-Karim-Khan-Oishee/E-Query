@@ -10,8 +10,10 @@ import QuestionDetails from "./pages/Questions/QuestionDetails";
 import UploadQuestionForm from "./pages/Questions/UploadQuestionForm";
 import Profile from "./pages/profile/Profile";
 import ResourceForm from "./pages/Resource/UploadResourceForm";
-
+import GetQuestions from "./pages/profile/GetQuestions";
 import GetAllResources from "./pages/Resource/getAllResources";
+import GetResources from "./pages/profile/GetResources";
+
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -33,6 +35,8 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/comments" element={<Comments />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/getQuestions" element={<GetQuestions />} />
+            <Route path="/profile/getResources" element={<GetResources />} />
             <Route path="/getAllQuestion" element={<GetAllQuestions />} />
             <Route path="/getAllResources" element={<GetAllResources />} />
             <Route path="/questions/:id" element={<QuestionDetails />} />

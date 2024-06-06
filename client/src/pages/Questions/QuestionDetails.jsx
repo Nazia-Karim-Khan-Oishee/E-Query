@@ -260,7 +260,8 @@ const QuestionDetails = () => {
                       key={image}
                       src={image}
                       alt="Uploaded"
-                      className="w-1/4 h-auto"
+                      className="w-1/4 h-auto cursor-pointer"
+                      onClick={() => window.open(image, "_blank")}
                     />
                   )
                 )
