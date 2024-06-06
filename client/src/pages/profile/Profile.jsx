@@ -1,48 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useUserProfile } from "../../hooks/profile/useUserProfile";
+import { useNavigate } from "react-router-dom";
+import upload from "../../utills/upload";
+import { Button } from "flowbite-react";
+import { FaCamera } from "react-icons/fa";
 
 const Profile = () => {
   const { fetchUserProfile, userProfile, error, isLoading } = useUserProfile();
-  const [images, setImages] = useState([]);
-  const [previewImages, setPreviewImages] = useState([]);
+  const [image, setImage] = useState(null);
+  const navigate = useNavigate();
+  const [uploading, setUploading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+  const fileInputRef = useRef(null);
+  const [updating, setUpdating] = useState(false);
+
   const handleImageChange = (e) => {
+    setUpdating(true);
     const files = Array.from(e.target.files);
     const fileArray = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages((prevImages) => prevImages.concat(fileArray));
-    setImages((prevImages) => prevImages.concat(files));
+    setPreviewImage(fileArray[0]);
+    setImage(files[0]);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
 
     try {
-      const imageUrls = await Promise.all(
-        images.map(async (image) => {
-          const url = await upload(image);
-          return url;
-        })
-      );
-
+      const imageUrl = await upload(image);
+      console.log(imageUrl);
       console.log(JSON.parse(localStorage.getItem("user"))._id);
-      const formData = {
-        text,
-        topic,
-        images: imageUrls,
-        // uploaderId: JSON.parse(localStorage.getItem("user"))._id,
-      };
+      await fetch("/api/users/updatepicture", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: JSON.parse(localStorage.getItem("user"))._id,
+          photo: imageUrl,
+        }),
+      });
 
-      await addQuestion(formData);
-      setText("");
-      setTopic("");
-      setImages([]);
-      setPreviewImages([]);
-      navigate("/getAllQuestion");
+      setImage(null);
+      setPreviewImage(null);
+      fetchUserProfile(); // Refresh the user profile after update
     } catch (err) {
       console.error("Error uploading question:", err);
     } finally {
       setUploading(false);
+      setUpdating(false);
     }
   };
+
   useEffect(() => {
     fetchUserProfile();
   }, []);
@@ -65,23 +74,57 @@ const Profile = () => {
     );
   }
 
-  // Render user profile if data is available
   return (
     <div className="max-w-md mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-12">
       <div className="p-6">
-        <div className="flex">
-          <h2 className="text-xl font-bold mb-4 mr-5">User Profile</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold mb-4">User Profile</h2>
           <button className="btn w-50">Update Profile</button>
         </div>
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <img
             src={
               userProfile.profilePicture ||
               "https://w7.pngwing.com/pngs/184/113/png-transparent-user-profile-computer-icons-profile-heroes-black-silhouette-thumbnail.png"
             }
             alt="Profile"
-            className="w-24 h-24 rounded-full mr-4"
+            className="w-24 h-24 rounded-full"
           />
+          <div
+            className="absolute bottom-0 right-0 bg-gray-800 p-2 rounded-full cursor-pointer"
+            onClick={() => fileInputRef.current.click()}
+          >
+            <FaCamera className="text-white" />
+          </div>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+            {previewImage && (
+              <div className="mt-2">
+                <label className="text-gray-600">Preview:</label>
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="w-24 h-24 rounded-full"
+                />
+              </div>
+            )}
+            {updating && (
+              <Button
+                color="blue"
+                type="submit"
+                disabled={uploading}
+                className="mt-4"
+              >
+                {uploading ? "Uploading..." : "Update Profile Picture"}
+              </Button>
+            )}
+          </form>
         </div>
         <div className="mb-4">
           <label className="text-gray-600">Email:</label>

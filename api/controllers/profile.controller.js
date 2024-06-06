@@ -157,27 +157,15 @@ const getProfile = async (req, res) => {
   }
 };
 
-const updateProfilePicture = async (req, res, next) => {
-  // console.log(userId);
-
-  const userId = req.user.id;
-
-  if (!req.file) {
-    return res.status(400).json({ message: "No file provided" });
-  }
-  const photo = req.file.filename;
-
-  // Update the user's name in the database
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { profile_image: photo },
-    { new: true }
-  );
-
-  if (!updatedUser) {
-    console.log("No user found");
-    return res.status(404).json({ error: "User not found" });
-  }
+const updateProfilePicture = async (req, res) => {
+  const userId = req.body.userId;
+  const photo = req.body.photo;
+  console.log(photo);
+  const user = await User.findById(userId);
+  user.profilePicture = photo;
+  await user.save();
+  console.log("pro pic");
+  console.log(user);
 
   console.log("Profile picture Updated ");
 
