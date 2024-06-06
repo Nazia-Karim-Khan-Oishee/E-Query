@@ -5,6 +5,7 @@ const Question = require("../datamodels/Question.model");
 const Comment = require("../datamodels/Comment.model");
 
 const bcrypt = require("bcrypt");
+const Bookmark = require("../datamodels/Bookmark.model");
 
 const updatePasssword = async (req, res, next) => {
   errors = [];
@@ -255,6 +256,20 @@ const getCommentsByUser = async (req, res) => {
   }
 };
 
+const getBookMarksByUser = async (req, res) => {
+  try {
+    const userId = req.headers["id"];
+
+    const userBookmark = await Bookmark.find({ userId: userId });
+
+    console.log("Got Bookmark posted by the user");
+    console.log(userBookmark);
+    res.status(200).json(userBookmark);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 module.exports = {
   updatePasssword,
   postProfileImage,
@@ -266,4 +281,5 @@ module.exports = {
   getQuestionsByUser,
   deleteProfileImage,
   getCommentsByUser,
+  getBookMarksByUser,
 };
