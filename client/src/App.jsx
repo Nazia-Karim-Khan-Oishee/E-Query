@@ -1,5 +1,5 @@
 import Signup from "./components/Authentication/Signup";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -41,7 +41,6 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-
     </>
   );
 }
