@@ -69,6 +69,7 @@ const GetAllQuestions = () => {
       regex,
       "<span class='bg-yellow-200 font-bold'>$1</span>"
     );
+    // setSearchTerm("");
     return highlightedText;
   };
 
@@ -85,12 +86,10 @@ const GetAllQuestions = () => {
             {searchResults.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md"
-              >
+                className="p-4 border rounded-lg shadow-md">
                 <Link
                   to={`/questions/${question._id}`}
-                  className="text-xl font-semibold text-blue-500"
-                >
+                  className="text-xl font-semibold text-blue-500">
                   {question.text}
                 </Link>
                 <p className="text-gray-600">
@@ -113,12 +112,10 @@ const GetAllQuestions = () => {
             {questions.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md"
-              >
+                className="p-4 border rounded-lg shadow-md">
                 <Link
                   to={`/questions/${question._id}`}
-                  className="text-xl font-semibold text-blue-500"
-                >
+                  className="text-xl font-semibold text-blue-500">
                   {question.text}
                 </Link>
                 <p className="text-gray-600">Topic: {question.topic}</p>
