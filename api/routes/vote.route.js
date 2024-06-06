@@ -10,9 +10,9 @@ const {
 
 const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
+router.post("/postVote/Comment", postVotetoComment);
 router.get("/getUpvote/:questionId", getUpvoters);
 // router.post("/postVote/Question", postVote);
-router.post("/postVote/Comment", postVotetoComment);
 router.patch("/update", updateVote);
 router.delete("/deleteVote/:Id", deleteVote);
 
