@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useEnterToken } from "../../hooks/useEnterToken";
+import { useEnterToken } from "../../hooks/Auth/useEnterToken";
 
 const EnterToken = () => {
   const [token, setToken] = useState("");
