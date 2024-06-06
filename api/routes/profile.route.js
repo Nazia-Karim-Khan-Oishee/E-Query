@@ -11,6 +11,7 @@ const {
   getResourcesByUser,
   getQuestionsByUser,
   getCommentsByUser,
+  getBookMarksByUser,
 } = require("../controllers/profile.controller");
 
 const { uploadProfileImage } = require("../middleware/image.middleware");
@@ -37,6 +38,7 @@ router.get("/getprofile", getProfile);
 router.get("/activity/getResources", getResourcesByUser);
 router.get("/activity/getQuestions", getQuestionsByUser);
 router.get("/activity/getComments", getCommentsByUser);
+router.get("/activity/getBookMarks", getBookMarksByUser);
 
 router.delete("/user/deletePicture", deleteProfileImage);
 

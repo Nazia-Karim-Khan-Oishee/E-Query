@@ -1,36 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useGetQuestion from "../../hooks/profile/useGetQuestions";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useDeleteQuestion from "../../hooks/profile/useDeleteQuestion";
+import useGetBookMarks from "../../hooks/profile/useGetBookmarks";
 
-const GetQuestions = () => {
-  const [questions, setQuestions] = useState([]);
+const GetBookMark = () => {
+  const [bookmark, setbookmark] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { deleteQuestion } = useDeleteQuestion();
+  const [questions, setQuestions] = useState([]);
+
   const {
-    getQuestion,
+    getBookmark,
     loading: getLoading,
     error: getError,
-    Question,
-  } = useGetQuestion();
+    BookMark,
+  } = useGetBookMarks();
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      await getQuestion();
+    const fetchBookMark = async () => {
+      await getBookmark();
+      console.log("Bookmark", BookMark.length);
       setLoading(false);
     };
 
-    fetchQuestions();
+    fetchBookMark();
   }, []);
 
   useEffect(() => {
-    if (Question) {
-      setQuestions(Question);
+    if (BookMark) {
+      setbookmark(bookmark);
     }
-  }, [Question]);
+  }, [BookMark]);
+
+  useEffect(() => {
+    if (BookMark && BookMark.length > 0) {
+      const fetchQuestions = async () => {
+        try {
+          const questionPromises = BookMark.map((bookmark) =>
+            fetch(
+              `http://localhost:4000/readQuestion?questionID=${bookmark.questionId}`
+            ).then((response) => response.json())
+          );
+          const questionData = await Promise.all(questionPromises);
+          setQuestions(questionData);
+        } catch (error) {
+          setError("Failed to fetch questions");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchQuestions();
+    } else {
+      setLoading(false);
+    }
+  }, [BookMark]);
 
   if (loading || getLoading) {
     return <p className="text-4xl align-middle">Loading...</p>;
@@ -40,28 +65,14 @@ const GetQuestions = () => {
     return <p>{error || getError}</p>;
   }
 
-  if (!questions.length) {
-    return <p className="text-4xl">No questions available.</p>;
+  if (!BookMark.length) {
+    return <p className="text-4xl">No BookMark available.</p>;
   }
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteQuestion(id);
-      alert("Question deleted successfully");
-      // setQuestions((prevQuestions) =>
-      //   prevQuestions.filter((question) => question._id !== id)
-      // );
-      window.location.reload();
-    } catch (err) {
-      // alert("Failed to delete the question.");
-      console.error("Failed to delete the question.", err);
-    }
-  };
 
   return (
     <div className="container mx-auto p-4">
       <div>
-        <h1 className="text-2xl font-bold mb-4">Questions</h1>
+        <h1 className="text-2xl font-bold mb-4">Bookmarks</h1>
         <ul className="space-y-4">
           {questions.map((question) => (
             <li key={question._id} className="p-4 border rounded-lg shadow-md">
@@ -70,11 +81,6 @@ const GetQuestions = () => {
                 className="text-xl font-semibold text-blue-500">
                 {question.text}
               </Link>
-              <FontAwesomeIcon
-                icon={faTrashCan}
-                className="ml-10 cursor-pointer"
-                onClick={() => handleDelete(question._id)}
-              />
               <p className="text-gray-600">Topic: {question.topic}</p>
               <p className="text-gray-400 text-sm">
                 Uploaded on: {new Date(question.timestamp).toLocaleString()}
@@ -87,4 +93,4 @@ const GetQuestions = () => {
   );
 };
 
-export default GetQuestions;
+export default GetBookMark;

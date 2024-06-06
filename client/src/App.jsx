@@ -17,6 +17,7 @@ import GetQuestions from "./pages/profile/GetQuestions";
 import GetAllResources from "./pages/Resource/getAllResources";
 import GetResources from "./pages/profile/GetResources";
 import UpdateProfile from "./pages/profile/UpdateProfile";
+import GetBookMark from "./pages/profile/GetBookmark";
 import "./App.css";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/getQuestions" element={<GetQuestions />} />
               <Route path="/profile/getResources" element={<GetResources />} />
+              <Route path="/profile/getBookmark" element={<GetBookMark />} />
               <Route path="/getAllQuestion" element={<GetAllQuestions />} />
               <Route path="/getAllResources" element={<GetAllResources />} />
               <Route path="/questions/:id" element={<QuestionDetails />} />
