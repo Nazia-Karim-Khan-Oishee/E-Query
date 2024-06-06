@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  updateUserName,
+  updateProfileInfo,
   updatePasssword,
   postProfileImage,
   getProfileImage,
@@ -17,7 +17,7 @@ const { uploadProfileImage } = require("../middleware/image.middleware");
 const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.patch("/users/updatepassword", ensureAuthenticated, updatePasssword);
-router.patch("/users/updateUsername", ensureAuthenticated, updateUserName);
+router.patch("/users/updateProfile", ensureAuthenticated, updateProfileInfo);
 router.patch(
   "/users/updatepicture",
   ensureAuthenticated,

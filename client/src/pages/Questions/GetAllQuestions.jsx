@@ -4,6 +4,8 @@ import SearchBar from "../../components/SearchBar";
 import useQuestionAPI from "../../hooks/Questions/useSearchQuestion";
 import useGetTopics from "../../hooks/Questions/useGetTopics";
 import parse from "html-react-parser";
+import UploadQuestionForm from "./UploadQuestionForm";
+import { Button } from "flowbite-react";
 
 const GetAllQuestions = () => {
   const [questions, setQuestions] = useState([]);
@@ -73,17 +75,22 @@ const GetAllQuestions = () => {
   return (
     <div className="container mx-auto p-4">
       <div>
-        <h1>Search Questions</h1>
+        <UploadQuestionForm />
+      </div>
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Search Questions</h1>
         <SearchBar onSearch={handleSearch} />
         {searchResults.length > 0 && (
           <ul className="space-y-4">
             {searchResults.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md">
+                className="p-4 border rounded-lg shadow-md"
+              >
                 <Link
                   to={`/questions/${question._id}`}
-                  className="text-xl font-semibold text-blue-500">
+                  className="text-xl font-semibold text-blue-500"
+                >
                   {question.text}
                 </Link>
                 <p className="text-gray-600">
@@ -106,10 +113,12 @@ const GetAllQuestions = () => {
             {questions.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md">
+                className="p-4 border rounded-lg shadow-md"
+              >
                 <Link
                   to={`/questions/${question._id}`}
-                  className="text-xl font-semibold text-blue-500">
+                  className="text-xl font-semibold text-blue-500"
+                >
                   {question.text}
                 </Link>
                 <p className="text-gray-600">Topic: {question.topic}</p>
