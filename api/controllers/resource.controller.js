@@ -165,6 +165,27 @@ const getAllResource = async (req, res, next) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const searchResources = async (req, res) => {
+  try {
+    const { searchTerm } = req.query;
+    console.log(searchTerm);
+    if (!searchTerm) {
+      return res.status(400).json({ error: "No search term provided" });
+    }
+
+    const resources = await Resource.find({
+      text: { $regex: searchTerm, $options: "i" },
+    });
+    if (!resources) {
+      console.log("No resources found");
+      return res.status(404).json({ error: "No resources found" });
+    }
+    console.log(resources);
+    res.status(200).json({ resources });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 module.exports = {
   createResource,
   updateText,
@@ -172,4 +193,5 @@ module.exports = {
   getResource,
   deleteResource,
   getAllResource,
+  searchResources,
 };
