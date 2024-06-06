@@ -199,9 +199,10 @@ const QuestionDetails = () => {
   };
 
   const handleSaveClick = (commentID) => {
+    console.log("commentID in editing", commentID);
     updateComment(commentID, newCommentText);
     setEditingComment(null);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleDeleteClick = (commentID) => {
