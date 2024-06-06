@@ -2,9 +2,6 @@
 
 import React, { useState } from "react";
 import { useChangePassword } from "../../hooks/Auth/useChangePassword";
-import AdminSideBar from "../Navigation/adminNavigation";
-import StsNavigation from "../Navigation/stsNavigation";
-import LandfillNavigation from "../Navigation/landfillNavigation";
 
 const ChangePassword = () => {
   const userId = JSON.parse(localStorage.getItem("user")).userId;
