@@ -8,6 +8,7 @@ const {
   getResource,
   getAllResource,
   searchResources,
+  extractTextAndSummarize,
 } = require("../controllers/resource.controller");
 
 const { uploadResource } = require("../middleware/pdf.middleware");
@@ -26,5 +27,6 @@ router.delete("/deleteResource/:resourceId", deleteResource);
 router.get("/getresource/:resourceId", getResource);
 router.get("/getAllResource", getAllResource);
 router.get("/searchResources", searchResources);
+router.post("/extractTextAndSummarize", extractTextAndSummarize);
 
 module.exports = router;

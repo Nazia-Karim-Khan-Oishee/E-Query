@@ -1,4 +1,3 @@
-
 import Signup from "./components/Authentication/Signup";
 import Navbar from "./components/Navbar";
 
@@ -24,7 +23,7 @@ function App() {
   return (
     <>
       <div>
-        <h1 className="text-black text-6xl">Hello World</h1>
+        <Navbar />
       </div>
       <BrowserRouter>
         <div className="Components">
@@ -42,7 +41,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-    </div>
+      {/* </div> */}
     </>
   );
 }

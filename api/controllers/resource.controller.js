@@ -2,6 +2,43 @@ const Resource = require("../datamodels/Resource.model");
 const path = require("path");
 const fs = require("fs");
 
+const Tesseract = require("tesseract.js");
+
+const summarizeText = (text) => {
+  const sentences = text.split(". ");
+  if (sentences.length > 2) {
+    return sentences.slice(0, 2).join(". ") + ".";
+  }
+  return text;
+};
+
+const extractTextAndSummarize = async (req, res) => {
+  try {
+    const { imageUrl } = req.body;
+
+    if (!imageUrl) {
+      return res.status(400).json({ message: "No image URL provided" });
+    }
+
+    // Dynamically import node-fetch
+    const fetch = (await import("node-fetch")).default;
+
+    const response = await fetch(imageUrl);
+    const imageBuffer = await response.buffer();
+
+    const {
+      data: { text },
+    } = await Tesseract.recognize(Buffer.from(imageBuffer), "eng");
+
+    const summary = summarizeText(text);
+
+    res.status(200).json({ text, summary });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const createResource = async (req, res) => {
   try {
     let pdf = ""; // Initialize with an empty string
@@ -194,4 +231,5 @@ module.exports = {
   deleteResource,
   getAllResource,
   searchResources,
+  extractTextAndSummarize,
 };
