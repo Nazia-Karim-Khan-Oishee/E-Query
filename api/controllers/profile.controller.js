@@ -116,25 +116,20 @@ const getProfileImage = async (req, res) => {
 
 const updateProfileInfo = async (req, res) => {
   try {
-    const name = req.body.name;
-    const phone = req.body.phone;
-    const token = req.cookies.jwt;
-    let userId;
-    try {
-      const decodedToken = jwt.verify(token, process.env.SECRET);
-      userId = decodedToken.id;
-    } catch (err) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
+    const { username, phone, userId } = req.body;
     const user = await User.findOne({ _id: userId });
-    if (name) {
-      user.name = name;
-    }
-    if (phone) {
-      user.phone = phone;
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    } else {
+      if (username) {
+        user.username = username;
+      }
+      if (phone) {
+        user.phone = phone;
+      }
     }
     await user.save();
-    res.json({ message: "Name updated successfully" });
+    res.json({ message: "Profile updated successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
