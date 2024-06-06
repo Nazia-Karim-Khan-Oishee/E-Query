@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Comments from "./pages/comments";
 import ProtectedRoute from "./protectedRoutes";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 import Signup from "./components/Authentication/Signup";
 import Login from "./components/Authentication/Login";
 import ResetPassword from "./components/Authentication/ResetPassword";
@@ -35,6 +35,7 @@ function App() {
             <Route path="/enterToken" element={<EnterToken />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/changePassword" element={<ChangePassword />} />
+
               <Route path="/comments" element={<Comments />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/getQuestions" element={<GetQuestions />} />

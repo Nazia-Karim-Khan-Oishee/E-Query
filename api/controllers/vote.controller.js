@@ -72,6 +72,17 @@ const updateVote = async (req, res) => {
 
     // const voterId = req.user.id;
 
+    const existingVote = await Vote.findOne({
+      questionId: voteId,
+      voterId: req.headers["id"],
+      typeOfVote: "downvote",
+    });
+    if (existingVote) {
+      console.log("Vote already exists");
+      return res
+        .status(400)
+        .json({ error: "You have already voted the comment" });
+    }
     newVote = new Vote({
       questionId: voteId,
       voterId: req.headers["id"],
@@ -92,7 +103,7 @@ const updateVote = async (req, res) => {
     }
 
     console.log("Vote updated successfully");
-    res.status(200).json({ newVote });
+    res.status(200).json(newVote);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -111,17 +122,20 @@ const postVotetoComment = async (req, res) => {
     const voterId = req.headers["id"];
     let reduce = 0;
     let newVote;
-    // const existingVote = await Vote.findOne({
-    //   questionId,
-    //   voterId,
-    // });
+    const existingVote = await Vote.findOne({
+      questionId,
+      voterId,
+      typeOfVote,
+    });
 
     // if (existingVote) {
-    //   if (existingVote.typeOfVote === typeOfVote) {
-    //     return res
-    //       .status(400)
-    //       .json({ error: "You have already voted the comment" });
-    //   } else {
+    if (existingVote) {
+      console.log("Vote already exists");
+      return res
+        .status(400)
+        .json({ error: "You have already voted the comment" });
+    }
+    // else {
     //     existingVote.typeOfVote = typeOfVote;
     //     reduce = 1;
     //   }

@@ -4,7 +4,7 @@ const useUpdateVote = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [vote, setVote] = useState(null);
-
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const updateVote = async (questionId) => {
     setLoading(true);
     setError(null);
@@ -23,11 +23,14 @@ const useUpdateVote = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to vote comment");
+        setError(errorData.error || "Failed to vote comment");
+        console.log(error);
+        return;
       }
 
       const voteData = await response.json();
       setVote(voteData.newVote);
+      setUpdateSuccess(true);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -35,7 +38,7 @@ const useUpdateVote = () => {
     }
   };
 
-  return { updateVote, vote, loading, error };
+  return { updateVote, vote, loading, error, updateSuccess };
 };
 
 export default useUpdateVote;

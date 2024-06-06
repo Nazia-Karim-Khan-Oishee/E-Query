@@ -74,8 +74,20 @@ const QuestionDetails = () => {
   const { updateComment } = useUpdateComment();
   const { addReply } = useAddReply();
   const { deleteComment } = useDeleteComment();
-  const { postVotetoComment } = useVoteComment();
-  const { updateVote } = useUpdateVote();
+  const {
+    postVotetoComment,
+    vote,
+    loading: postLoading,
+    error: postError,
+    success,
+  } = useVoteComment();
+  const {
+    updateVote,
+    vote: downvote,
+    loading: updatevoteloading,
+    error: downvoteError,
+    updateSuccess,
+  } = useUpdateVote();
   const {
     bookmarkQuestion,
     loading: bookmarking,
@@ -220,13 +232,25 @@ const QuestionDetails = () => {
   }
 
   const handleUpvote = async (commentId) => {
+    console.log("UPVOTE", commentId);
     postVotetoComment(commentId, "upvote");
-    window.location.reload();
+    // if (postError) {
+    // console.log("postError", postError);
+    if (success) {
+      window.location.reload();
+    } else {
+      // alert("You have already voted on this comment");
+    }
   };
   const handleDownvote = async (commentId) => {
     updateVote(commentId);
-    console.log("DOWNVOTE", commentId);
-    window.location.reload();
+    console.log("updatevote", downvote);
+    if (updateSuccess) {
+      console.log("updateSuccess", updateSuccess);
+      window.location.reload();
+    } else {
+      // alert("You have already voted on this comment");
+    }
   };
   return (
     <div className="container mx-auto p-4">

@@ -114,27 +114,30 @@ const getProfileImage = async (req, res) => {
   }
 };
 
-const updateUserName = async (req, res, next) => {
-  // console.log(userId);
-
-  const userId = req.user.id;
-  const { name } = req.body;
-
-  // Update the user's name in the database
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { name: name },
-    { new: true }
-  );
-
-  if (!updatedUser) {
-    console.log("No user found");
-    return res.status(404).json({ error: "User not found" });
+const updateProfileInfo = async (req, res) => {
+  try {
+    const name = req.body.name;
+    const phone = req.body.phone;
+    const token = req.cookies.jwt;
+    let userId;
+    try {
+      const decodedToken = jwt.verify(token, process.env.SECRET);
+      userId = decodedToken.id;
+    } catch (err) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+    const user = await User.findOne({ _id: userId });
+    if (name) {
+      user.name = name;
+    }
+    if (phone) {
+      user.phone = phone;
+    }
+    await user.save();
+    res.json({ message: "Name updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  console.log("Username Updated ");
-
-  res.json({ message: "Username updated successfully" });
 };
 
 const getProfile = async (req, res) => {
@@ -261,7 +264,7 @@ module.exports = {
   updatePasssword,
   postProfileImage,
   getProfileImage,
-  updateUserName,
+  updateProfileInfo,
   getProfile,
   updateProfilePicture,
   getResourcesByUser,
