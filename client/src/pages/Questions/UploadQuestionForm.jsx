@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAddQuestion from "../../hooks/Questions/useAddQuestion";
 import upload from "../../utills/upload";
 import { useNavigate } from "react-router-dom";
+import { Textarea, Button, Label, TextInput } from "flowbite-react";
 const UploadQuestionForm = () => {
   const navigate = useNavigate();
   const [text, setText] = useState("");
@@ -53,35 +54,48 @@ const UploadQuestionForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Question Text:</label>
-        <input
-          type="text"
+        <h1 className="text-2xl font-bold mb-4">Ask a question</h1>
+        <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           required
         />
       </div>
-      <div>
-        <label>Topic:</label>
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Images:</label>
-        <input type="file" onChange={handleImageChange} multiple />
-        <div>
-          {previewImages.map((image, index) => (
-            <img key={index} src={image} alt={`preview ${index}`} width="100" />
-          ))}
+      <div className="qattcontainer">
+        <div className="topic-box">
+          <TextInput
+            type="text"
+            value={topic}
+            placeholder="Enter topic"
+            onChange={(e) => setTopic(e.target.value)}
+            required
+          />
         </div>
+        <div>
+          <Label>Images:</Label>
+          <input
+            className="file-input"
+            type="file"
+            onChange={handleImageChange}
+            accept="image/*"
+            multiple
+          />
+
+          <div>
+            {previewImages.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`preview ${index}`}
+                width="100"
+              />
+            ))}
+          </div>
+        </div>
+        <Button color="blue" type="submit" disabled={uploading || loading}>
+          {uploading || loading ? "Uploading..." : "Upload Question"}
+        </Button>
       </div>
-      <button type="submit" disabled={uploading || loading}>
-        {uploading || loading ? "Uploading..." : "Upload Question"}
-      </button>
       {error && <p>Error: {error}</p>}
       {response && <p>Question uploaded successfully!</p>}
     </form>

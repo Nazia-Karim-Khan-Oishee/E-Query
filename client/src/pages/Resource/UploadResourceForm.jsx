@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import upload from "../../utills/upload";
 import useCreateResource from "../../hooks/Resource/useCreateResource";
+import { Textarea, Button, Label, TextInput } from "flowbite-react";
 const ResourceForm = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [text, setText] = useState("");
@@ -60,33 +61,35 @@ const ResourceForm = () => {
 
   return (
     <div>
-      <h2>Create Resource</h2>
+      <h1 className="text-2xl font-bold mb-4">Share a resource</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
+          required
         />
-        <div>
-          <input type="file" accept=".pdf" onChange={handleFileChange} />
-        </div>
-        <div>
-          <label>Images:</label>
-          <input type="file" onChange={handleImageChange} multiple />
+        <div className="qattcontainer">
           <div>
-            {previewImages.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`preview ${index}`}
-                width="100"
-              />
-            ))}
+            <input type="file" accept=".pdf" onChange={handleFileChange} />
           </div>
+          <div>
+            <label>Images:</label>
+            <input type="file" onChange={handleImageChange} multiple />
+            <div>
+              {previewImages.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`preview ${index}`}
+                  width="100"
+                />
+              ))}
+            </div>
+          </div>
+          <Button color="blue" type="submit" disabled={loading}>
+            Submit
+          </Button>
         </div>
-        <button type="submit" disabled={loading}>
-          Submit
-        </button>
         {error && <p>Error: {error}</p>}
       </form>
     </div>

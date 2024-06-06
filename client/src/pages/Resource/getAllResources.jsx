@@ -7,6 +7,7 @@ import { generatePDFFromSummary } from "../../utills/generatePDF";
 import useExtractTextAndSummarize from "../../hooks/Resource/useTextExtraction";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UploadResourceForm from "./UploadResourceForm";
 
 const GetAllResources = () => {
   const { loading, error, getResource, resource } = usegetAllResource();
@@ -83,9 +84,12 @@ const GetAllResources = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Resource List</h1>
+      <div className="mx-5">
+        <UploadResourceForm />
+      </div>
+      <h1 className="text-2xl mx-5 font-bold mb-4">Resource List</h1>
 
-      <div>
+      <div className="mx-5">
         <h5>Search Resources</h5>
 
         <SearchBar onSearch={handleSearch} />
@@ -98,7 +102,8 @@ const GetAllResources = () => {
                 {res.pdf && (
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => openPDF(res.pdf)}>
+                    onClick={() => openPDF(res.pdf)}
+                  >
                     View PDF
                   </button>
                 )}
@@ -114,7 +119,8 @@ const GetAllResources = () => {
                       />
                       <button
                         className="mt-2 p-2 bg-blue-500 text-white rounded"
-                        onClick={() => handleExtractTextAndSummarize(image)}>
+                        onClick={() => handleExtractTextAndSummarize(image)}
+                      >
                         Click to summarize
                       </button>
                     </div>
@@ -129,11 +135,12 @@ const GetAllResources = () => {
         <div className="">
           {existingResources.map((res) => (
             <div key={res._id} className="border rounded-lg p-4">
-              <p className="text-lg font-semibold mb-2">Text: {res.text}</p>
+              <p className="text-lg font-semibold mb-2"> {res.text}</p>
               {res.pdf && (
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => openPDF(res.pdf)}>
+                  onClick={() => openPDF(res.pdf)}
+                >
                   View PDF
                 </button>
               )}
@@ -149,7 +156,8 @@ const GetAllResources = () => {
                     />
                     <button
                       className="mt-2 p-2 bg-blue-500 text-white rounded"
-                      onClick={() => handleExtractTextAndSummarize(image)}>
+                      onClick={() => handleExtractTextAndSummarize(image)}
+                    >
                       Click to summarize
                     </button>
                     <ToastContainer
