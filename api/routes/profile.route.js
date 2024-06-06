@@ -17,7 +17,7 @@ const { uploadProfileImage } = require("../middleware/image.middleware");
 const { ensureAuthenticated } = require("../middleware/auth.middleware");
 
 router.patch("/users/updatepassword", ensureAuthenticated, updatePasssword);
-router.patch("/users/updateProfile", ensureAuthenticated, updateProfileInfo);
+router.patch("/users/updateProfile", updateProfileInfo);
 router.patch(
   "/users/updatepicture",
   ensureAuthenticated,
