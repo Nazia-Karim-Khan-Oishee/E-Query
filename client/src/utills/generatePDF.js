@@ -2,14 +2,12 @@ import { PDFDocument, rgb } from "pdf-lib";
 
 export const generatePDFFromSummary = async (summary) => {
   try {
-    // Clean and format the summary text (you may need to customize this based on your requirements)
-    const cleanedSummary = summary.replace(/[^a-zA-Z0-9\s]/g, ""); // Remove special characters
+    const cleanedSummary = summary.replace(/[^a-zA-Z0-9\s]/g, "");
 
     // Create a new PDF document
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 800]);
 
-    // Add the cleaned summary text to the PDF document
     const fontSize = 12;
     page.drawText(cleanedSummary, {
       x: 50,
