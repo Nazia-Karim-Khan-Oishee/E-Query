@@ -45,6 +45,11 @@ const Profile = () => {
             <p className="text-gray-900">{userProfile.phone}</p>
           </div>
         )}
+        <div>
+          <a href="/changePassword">
+            <button className="btn w-56">Change Password</button>
+          </a>
+        </div>
       </div>
     </div>
   );
