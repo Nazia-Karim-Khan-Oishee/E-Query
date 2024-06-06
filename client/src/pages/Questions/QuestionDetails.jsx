@@ -194,11 +194,14 @@ const QuestionDetails = () => {
   };
 
   const handleEditClick = (comment) => {
+    console.log("comment EDITTTTTTTTT", comment);
     setEditingComment(comment._id);
     setNewCommentText(comment.comment);
+    console.log("newCommentText", newCommentText);
   };
 
   const handleSaveClick = (commentID) => {
+    console.log("commentID in editing", commentID);
     updateComment(commentID, newCommentText);
     setEditingComment(null);
     window.location.reload();
@@ -288,10 +291,10 @@ const QuestionDetails = () => {
                       {" "}
                       {/* Move the ul element here */}
                       <li key={comment._id}>
-                        {comment && reply && editingComment === reply._id ? (
+                        {comment && editingComment === comment._id ? (
                           <>
                             <textarea
-                              value={reply.newCommentText}
+                              value={newCommentText}
                               onChange={(e) =>
                                 setNewCommentText(e.target.value)
                               }
@@ -370,7 +373,7 @@ const QuestionDetails = () => {
                                       {editingComment === reply._id ? (
                                         <>
                                           <textarea
-                                            value={reply.newCommentText}
+                                            value={newCommentText}
                                             onChange={(e) =>
                                               setNewCommentText(e.target.value)
                                             }
