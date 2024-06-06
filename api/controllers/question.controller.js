@@ -1,6 +1,7 @@
 const Question = require("../datamodels/Question.model");
 const path = require("path");
 const fs = require("fs");
+const Bookmark = require("../datamodels/Bookmark.model");
 
 const createQuestion = async (req, res) => {
   try {
@@ -86,18 +87,19 @@ const updateQuestionsTopic = async (req, res) => {
 
 const deleteQuestion = async (req, res) => {
   try {
-    const questionID = req.query.questionID;
+    const { questionID } = req.query;
 
     const existingQuestion = await Question.findById(questionID);
-    if (!existingQuestion) {
-      console.log("Question not found");
-      return res.status(404).json({ error: "Question not found" });
-    }
 
-    if (existingQuestion.uploaderId !== req.user.id) {
-      console.log("Unauthorized");
-      return res.status(401).json({ error: "Unauthorized" });
+    const bookmark = await Bookmark.findOne({ questionId: questionID });
+    if (bookmark) {
+      console.log("Bookmark found");
+      await bookmark.deleteOne();
     }
+    // if (existingQuestion.uploaderId !== req.user.id) {
+    //   console.log("Unauthorized");
+    //   return res.status(401).json({ error: "Unauthorized" });
+    // }
 
     const deletedQuestion = await Question.findByIdAndDelete(questionID);
 
@@ -206,7 +208,6 @@ const searchQuestions = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 const getAllTopics = async (req, res) => {
   try {
