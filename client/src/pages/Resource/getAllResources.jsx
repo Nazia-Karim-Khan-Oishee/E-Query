@@ -8,6 +8,13 @@ import useExtractTextAndSummarize from "../../hooks/Resource/useTextExtraction";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UploadResourceForm from "./UploadResourceForm";
+import {
+  faFilePdf,
+  faImages,
+  faRectangleList,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Tooltip from "../../components/ToolTip";
 
 const GetAllResources = () => {
   const { loading, error, getResource, resource } = usegetAllResource();
@@ -94,85 +101,124 @@ const GetAllResources = () => {
 
         <SearchBar onSearch={handleSearch} />
         {searchResults.length > 0 && (
-          <ul className="space-y-4">
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {/* <ul className="space-y-4"> */}
             {searchResults.map((res) => (
-              <div key={res._id} className="border rounded-lg p-4">
-                {parse(highlightSearchTerm(res.text, searchTerm))}
+              <div key={res._id} className="border rounded-lg p-4 shadow-lg">
+                <p className="ml-10 text-lg font-semibold mb-2">
+                  {parse(highlightSearchTerm(res.text, searchTerm))}
+                </p>
 
                 {res.pdf && (
-                  <button className="btn w-56" onClick={() => openPDF(res.pdf)}>
-                    View PDF
-                  </button>
+                  // <button className="btn w-56" onClick={() => openPDF(res.pdf)}>
+                  //   View PDF
+                  // </button>
+                  <Tooltip text="View PDF">
+                    <FontAwesomeIcon
+                      icon={faFilePdf}
+                      className="mr-2 ml-12 text-2xl solid cursor-pointer"
+                      onClick={() => openPDF(res.pdf)}
+                    />
+                  </Tooltip>
                 )}
                 {res.images &&
                   res.images.length > 0 &&
                   res.images.map((image, index) => (
-                    <div key={index} className="my-4">
-                      <img
+                    // <div key={index} className="my-4">
+                    <>
+                      {/* <img
                         src={image}
                         alt="resource"
                         className="w-1/4 h-auto cursor-pointer"
                         onClick={() => openImageInNewWindow(image)}
-                      />
-                      <button
-                        className="btn w-56"
-                        onClick={() => handleExtractTextAndSummarize(image)}
-                      >
-                        Click to summarize
-                      </button>
-                    </div>
+                      /> */}
+                      <Tooltip text="View Image">
+                        <FontAwesomeIcon
+                          key={index}
+                          icon={faImages}
+                          className="ml-2 mr-2 text-2xl solid cursor-pointer"
+                          onClick={() => openImageInNewWindow(image)}
+                        />
+                      </Tooltip>
+                      {/* <button
+                        className="btn px-2 mt-5 ml-4"
+                        onClick={() => handleExtractTextAndSummarize(image)}>
+                        Summarize Image
+                      </button> */}
+                      <Tooltip text="Summarize Image">
+                        <FontAwesomeIcon
+                          icon={faRectangleList}
+                          className="ml-2 mr-2 py-.5 text-2xl solid cursor-pointer"
+                          onClick={() => handleExtractTextAndSummarize(image)}
+                        />
+                      </Tooltip>
+                      {/* </div> */}
+                    </>
                   ))}
               </div>
             ))}
-          </ul>
+            {/* </ul> */}
+          </div>
         )}
       </div>
 
       {searchResults.length === 0 && (
-        <div className="">
+        <div className="mt-2 grid grid-cols-3 gap-2">
           {existingResources.map((res) => (
-            <div key={res._id} className="border rounded-lg p-4">
-              <p className="text-lg font-semibold mb-2"> {res.text}</p>
-              {res.pdf && (
-                <button
-                  className="btn w-56 mt-5"
-                  onClick={() => openPDF(res.pdf)}
-                >
-                  View PDF
-                </button>
-              )}
-              {res.images &&
-                res.images.length > 0 &&
-                res.images.map((image, index) => (
-                  <div key={index} className="my-4">
-                    <img
-                      src={image}
-                      alt="resource"
-                      className="w-1/4 h-auto cursor-pointer"
-                      onClick={() => openImageInNewWindow(image)}
+            <>
+              <div key={res._id} className="border rounded-lg p-4 shadow-lg">
+                <p className="ml-10 text-lg font-semibold mb-2"> {res.text}</p>
+                {res.pdf && (
+                  // <button
+                  //   className="btn w-56 mt-5"
+                  //   onClick={() => openPDF(res.pdf)}>
+                  //   View PDF
+                  // </button>
+                  <Tooltip text="View PDF">
+                    <FontAwesomeIcon
+                      icon={faFilePdf}
+                      className="mr-2 ml-12 text-2xl solid cursor-pointer"
+                      onClick={() => openPDF(res.pdf)}
                     />
-                    <button
-                      className="btn w-56 mt-5"
-                      onClick={() => handleExtractTextAndSummarize(image)}
-                    >
-                      Click to summarize
-                    </button>
-                    <ToastContainer
-                      position="top-center"
-                      autoClose={5000}
-                      hideProgressBar={false}
-                      newestOnTop={false}
-                      closeOnClick
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                      theme="dark"
-                      transition="bounce"
-                    />
-                  </div>
-                ))}
-            </div>
+                  </Tooltip>
+                )}
+                {res.images &&
+                  res.images.length > 0 &&
+                  res.images.map((image, index) => (
+                    <>
+                      {/* <div key={index} className="my-4"> */}
+                      {/* <img
+                        src={image}
+                        alt="resource"
+                        className="w-1/4 h-auto cursor-pointer"
+                        onClick={() => openImageInNewWindow(image)}
+                      /> */}
+                      <Tooltip text="View Image">
+                        <FontAwesomeIcon
+                          key={index}
+                          icon={faImages}
+                          className="ml-2 mr-2 text-2xl solid cursor-pointer"
+                          onClick={() => openImageInNewWindow(image)}
+                        />
+                      </Tooltip>
+                      <Tooltip text="Summarize Image">
+                        {/* <button
+                          className="btn px-2 mt-5 ml-4"
+                          onClick={() => handleExtractTextAndSummarize(image)}>
+                          Summarize image
+                        </button> */}
+                        <FontAwesomeIcon
+                          icon={faRectangleList}
+                          className="ml-2 mr-2 py-.5 text-2xl solid cursor-pointer"
+                          onClick={() => handleExtractTextAndSummarize(image)}
+                        />
+                      </Tooltip>
+                      {/* </div> */}
+                    </>
+                  ))}
+              </div>
+              {/* <br></br> */}
+            </>
           ))}
         </div>
       )}

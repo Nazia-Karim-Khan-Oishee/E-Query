@@ -61,10 +61,10 @@ const GetQuestions = () => {
   return (
     <div className="container mx-auto p-4">
       <div>
-        <h1 className="text-2xl font-bold mb-4">Questions</h1>
-        <ul className="space-y-4">
+        <h1 className="text-2xl font-bold mb-4">My Questions</h1>
+        <ul className="grid grid-cols-2 gap-4 px-1">
           {questions.map((question) => (
-            <li key={question._id} className="p-4 border rounded-lg shadow-md">
+            <li key={question._id} className="p-4 border rounded-lg shadow-lg">
               <Link
                 to={`/questions/${question._id}`}
                 className="text-xl font-semibold text-blue-500">
@@ -72,7 +72,7 @@ const GetQuestions = () => {
               </Link>
               <FontAwesomeIcon
                 icon={faTrashCan}
-                className="ml-10 cursor-pointer"
+                className="ml-20 mr-10 cursor-pointer"
                 onClick={() => handleDelete(question._id)}
               />
               <p className="text-gray-600">Topic: {question.topic}</p>

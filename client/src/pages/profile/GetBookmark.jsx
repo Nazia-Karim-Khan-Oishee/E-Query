@@ -20,7 +20,7 @@ const GetBookMark = () => {
   useEffect(() => {
     const fetchBookMark = async () => {
       await getBookmark();
-      console.log("Bookmark", BookMark.length);
+      console.log("Bookmark", BookMark);
       setLoading(false);
     };
 
@@ -72,8 +72,8 @@ const GetBookMark = () => {
   return (
     <div className="container mx-auto p-4">
       <div>
-        <h1 className="text-2xl font-bold mb-4">Bookmarks</h1>
-        <ul className="space-y-4">
+        <h1 className="text-2xl font-bold mb-4">My Bookmarks</h1>
+        <ul className=" grid grid-cols-2 gap-4 px-1">
           {questions.map((question) => (
             <li key={question._id} className="p-4 border rounded-lg shadow-md">
               <Link

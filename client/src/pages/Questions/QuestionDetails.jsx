@@ -8,12 +8,16 @@ import useDeleteComment from "../../hooks/comments/useDeleteComment";
 // import CommentWithVotes from "../../components/CommentwithVotes";
 import useVoteComment from "../../hooks/vote/useVoteComment";
 import useUpdateVote from "../../hooks/vote/useUpdateVote";
+import Tooltip from "../../components/ToolTip";
 import {
   faThumbsUp,
   faThumbsDown,
   faArrowRight,
   faPen,
   faTrashCan,
+  faComment,
+  faArrowRightToBracket,
+  faReply,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -257,26 +261,29 @@ const QuestionDetails = () => {
       {question ? (
         <>
           <div className="flex-inliine">
-            <h1 className="text-2xl font-bold mb-4">{question.text}</h1>
-            {isBookmarked ? (
-              <FontAwesomeIcon
-                icon={solidBookmark}
-                //BOOKMARKED
-                className="cursor-pointer"
-                onClick={handleDeleteBookmark}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={regularBookmark}
-                className="cursor-pointer"
-                onClick={handleBookmarkQuestion}
-              />
-            )}
+            <h1 className="text-2xl font-bold mb-4">
+              {question.text}
+              {isBookmarked ? (
+                <FontAwesomeIcon
+                  icon={solidBookmark}
+                  //BOOKMARKED
+                  className="cursor-pointer ml-10"
+                  onClick={handleDeleteBookmark}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={regularBookmark}
+                  className="cursor-pointer ml-10"
+                  onClick={handleBookmarkQuestion}
+                />
+              )}
+            </h1>
+
             {/* {BookmarkResponse && <p>{JSON.stringify(BookmarkResponse)}</p>} */}
           </div>
-          <p className="text-gray-600">Topic: {question.topic}</p>
-          <p className="text-gray-600">Upvotes: {question.upvotes}</p>
-          <p className="text-gray-600">Downvotes: {question.downvotes}</p>
+          <p className="text-gray-600 text-xl">Topic: {question.topic}</p>
+          {/* <p className="text-gray-600">Upvotes: {question.upvotes}</p>
+          <p className="text-gray-600">Downvotes: {question.downvotes}</p> */}
           {question.images && question.images.length > 0 ? (
             <div className="flex flex-wrap">
               {question.images.map(
@@ -326,14 +333,12 @@ const QuestionDetails = () => {
                             />
                             <button
                               className="btn"
-                              onClick={() => handleSaveClick(comment._id)}
-                            >
+                              onClick={() => handleSaveClick(comment._id)}>
                               Save
                             </button>
                             <button
                               className="btn"
-                              onClick={() => setEditingComment(null)}
-                            >
+                              onClick={() => setEditingComment(null)}>
                               Cancel
                             </button>
                           </>
@@ -341,11 +346,18 @@ const QuestionDetails = () => {
                           <>
                             {comment && (
                               <>
-                                <p>{comment.comment}</p>
+                                <p className="text-2xl ">
+                                  {" "}
+                                  <FontAwesomeIcon
+                                    icon={faArrowRightToBracket}
+                                    className="ml-2 mr-4 text-2xl solid color-blue"
+                                  />
+                                  {comment.comment}
+                                </p>
                                 {comment.commenterId === userId && (
                                   <FontAwesomeIcon
                                     icon={faPen}
-                                    className="ml-4 cursor-pointer"
+                                    className="ml-12 cursor-pointer"
                                     onClick={() => handleEditClick(comment)}
                                   />
                                 )}
@@ -355,7 +367,7 @@ const QuestionDetails = () => {
                         )}
                         <FontAwesomeIcon
                           icon={faThumbsUp}
-                          className="ml-4 cursor-pointer"
+                          className="ml-4 cursor-pointer "
                           onClick={() => handleUpvote(comment._id)}
                         />
                         {comment.upvotes}
@@ -377,7 +389,7 @@ const QuestionDetails = () => {
                           {" "}
                           {/* Pass comment ID */}
                           <textarea
-                            className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2"
+                            className="px-2 py-1 border border-gray-400 shadow-md rounded-lg sm:w-3/4 md:w-1/2 mt-2"
                             name="reply"
                             value={reply[comment._id] || ""}
                             placeholder="Add a reply"
@@ -388,8 +400,14 @@ const QuestionDetails = () => {
                               })
                             }
                           />
-                          <button className="btn ml-3" type="submit">
-                            Reply
+                          <button className=" ml-5" type="submit">
+                            {/* Reply */}
+                            <Tooltip text="Add Reply">
+                              <FontAwesomeIcon
+                                icon={faReply}
+                                className="text-2xl"
+                              />
+                            </Tooltip>
                           </button>
                         </form>
                         {comment.replies &&
@@ -414,26 +432,30 @@ const QuestionDetails = () => {
                                             className="btn"
                                             onClick={() =>
                                               handleSaveClick(reply._id)
-                                            }
-                                          >
+                                            }>
                                             Save
                                           </button>
                                           <button
                                             className="btn"
                                             onClick={() =>
                                               setEditingComment(null)
-                                            }
-                                          >
+                                            }>
                                             Cancel
                                           </button>
                                         </>
                                       ) : (
                                         <>
-                                          <p>{reply.comment}</p>
+                                          <p>
+                                            <FontAwesomeIcon
+                                              icon={faArrowRightToBracket}
+                                              className="ml-4 mr-4 text-xl regular color-blue"
+                                            />
+                                            {reply.comment}
+                                          </p>
                                           {reply.commenterId === userId && (
                                             <FontAwesomeIcon
                                               icon={faPen}
-                                              className="ml-4 cursor-pointer"
+                                              className="ml-12 cursor-pointer"
                                               onClick={() =>
                                                 handleEditClick(reply)
                                               }
@@ -473,6 +495,7 @@ const QuestionDetails = () => {
                             </ul>
                           )}
                       </li>
+                      <br></br>
                     </ul>
                   </li>
                 )
@@ -484,14 +507,17 @@ const QuestionDetails = () => {
       )}
       <form onSubmit={handleSubmit}>
         <textarea
-          className="px-4 py-2 border border-gray-300 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2" // Adjust width here
+          className="px-4 py-2 border border-gray-600 rounded-lg w-full sm:w-3/4 md:w-1/2 mt-2 shadow-lg"
           name="comment"
           value={comment}
           placeholder="Add a comment"
           onChange={(e) => setComment(e.target.value)}
         />
-        <button className="btn ml-3" type="submit">
-          Submit
+        <button className=" ml-5 mb-20" type="submit">
+          {/* Submit */}
+          <Tooltip text="Add Comment">
+            <FontAwesomeIcon icon={faComment} className="text-2xl" />
+          </Tooltip>
         </button>
       </form>
     </div>

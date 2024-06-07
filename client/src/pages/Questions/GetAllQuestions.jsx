@@ -82,11 +82,11 @@ const GetAllQuestions = () => {
         <h1 className="text-2xl font-bold mb-4">Search Questions</h1>
         <SearchBar onSearch={handleSearch} />
         {searchResults.length > 0 && (
-          <ul className="space-y-4">
+          <ul className=" grid grid-cols-2 gap-4 px-1">
             {searchResults.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md">
+                className="p-4 border rounded-lg shadow-lg">
                 <Link
                   to={`/questions/${question._id}`}
                   className="text-xl font-semibold text-blue-500">
@@ -108,11 +108,11 @@ const GetAllQuestions = () => {
       {searchResults.length === 0 && (
         <div>
           <h1 className="text-2xl font-bold mb-4">Questions</h1>
-          <ul className="space-y-4">
+          <ul className=" grid grid-cols-2 gap-4 px-1 ">
             {questions.map((question) => (
               <li
                 key={question._id}
-                className="p-4 border rounded-lg shadow-md">
+                className="p-2 border rounded-lg shadow-lg">
                 <Link
                   to={`/questions/${question._id}`}
                   className="text-xl font-semibold text-blue-500">

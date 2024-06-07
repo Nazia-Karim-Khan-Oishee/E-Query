@@ -58,6 +58,7 @@ const UploadQuestionForm = () => {
         <Textarea
           color={"gray-600"}
           value={text}
+          placeholder="Ask question here..."
           onChange={(e) => setText(e.target.value)}
           required
         />
@@ -74,7 +75,7 @@ const UploadQuestionForm = () => {
           />
         </div>
         <div>
-          <Label>Images:</Label>
+          <Label className="mr-2">Chosse Images:</Label>
           <input
             className="file-input"
             type="file"
@@ -97,8 +98,7 @@ const UploadQuestionForm = () => {
         <button
           className="btn w-50"
           type="submit"
-          disabled={uploading || loading}
-        >
+          disabled={uploading || loading}>
           {uploading || loading ? "Uploading..." : "Upload Question"}
         </button>
       </div>

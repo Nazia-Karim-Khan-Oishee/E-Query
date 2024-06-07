@@ -1,4 +1,4 @@
-import { Navbar } from "flowbite-react"; // Assuming Container is imported for layout control
+import { Dropdown, Navbar } from "flowbite-react"; // Assuming Container is imported for layout control
 import { useState } from "react";
 import { useLogout } from "../hooks/Auth/useLogout";
 
@@ -40,25 +40,40 @@ export default function Component() {
 
               <li>
                 <Navbar.Link
-                  className="ml-4 text-white"
-                  href="/getAllResources"
-                >
+                  className="ml-4 mr-4 text-white"
+                  href="/getAllResources">
                   Resources
                 </Navbar.Link>
               </li>
               <li>
-                <Navbar.Link
-                  className="ml-4 text-white"
-                  href="/profile/getBookmark"
-                >
-                  BookMarks
-                </Navbar.Link>
+                {/* <Dropdown
+                  label="Profile"
+                  inline={true}
+                  className="text-white flex">
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile">Profile</Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getQuestions">
+                      My Questions
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getResources">
+                      My Resouces
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getBookmark">
+                      My BookMarks
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                </Dropdown> */}
               </li>
             </ul>
             <button
               className="bg-red-600 text-white px-4 py-2 ml-6  rounded-md"
-              onClick={handleLogout}
-            >
+              onClick={handleLogout}>
               Logout
             </button>
           </div>
