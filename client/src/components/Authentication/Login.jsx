@@ -28,7 +28,8 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900">
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Email or Username
               </label>
             </div>
@@ -49,13 +50,15 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900">
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Password
               </label>
               <div className="text-sm">
                 <a
                   href="/resetPassword"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500">
+                  className="font-semibold text-indigo-600 hover:text-indigo-500"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -79,10 +82,22 @@ const Login = () => {
               disabled={isLoading}
               type="submit"
               onClick={handleSubmit}
-              className="btn flex w-56 justify-center rounded-md px-3 py-1.4 text-sm font-semibold leading-6">
+              className="btn flex w-56 justify-center rounded-md px-3 py-1.4 text-sm font-semibold leading-6"
+            >
               Sign in
             </button>
             {error && <div className="error">{error}</div>}
+          </div>
+          <div>
+            <p className="text-sm text-center text-gray-600">
+              Don't have an account?{" "}
+              <a
+                href="/signup"
+                className="font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                Sign up
+              </a>
+            </p>
           </div>
         </form>
       </div>

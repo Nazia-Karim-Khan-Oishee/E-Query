@@ -79,7 +79,9 @@ const Profile = () => {
       <div className="p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold mb-4">User Profile</h2>
-          <button className="btn w-50">Update Profile</button>
+          <a href="/updateProfile">
+            <button className="btn w-50">Edit</button>
+          </a>
         </div>
         <div className="mb-4 relative">
           <img
@@ -142,7 +144,7 @@ const Profile = () => {
         )}
         <div>
           <a href="/changePassword">
-            <button className="btn w-56">Change Password</button>
+            <button className="btn w-50">Change Password</button>
           </a>
         </div>
       </div>

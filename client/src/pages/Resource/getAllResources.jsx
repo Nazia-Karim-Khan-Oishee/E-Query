@@ -87,7 +87,7 @@ const GetAllResources = () => {
       <div className="mx-5">
         <UploadResourceForm />
       </div>
-      <h1 className="text-2xl mx-5 font-bold mb-4">Resource List</h1>
+      <h1 className="text-2xl mx-5 mt-10 font-bold mb-4">Resource List</h1>
 
       <div className="mx-5">
         <h5>Search Resources</h5>
@@ -100,10 +100,7 @@ const GetAllResources = () => {
                 {parse(highlightSearchTerm(res.text, searchTerm))}
 
                 {res.pdf && (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => openPDF(res.pdf)}
-                  >
+                  <button className="btn w-56" onClick={() => openPDF(res.pdf)}>
                     View PDF
                   </button>
                 )}
@@ -118,7 +115,7 @@ const GetAllResources = () => {
                         onClick={() => openImageInNewWindow(image)}
                       />
                       <button
-                        className="mt-2 p-2 bg-blue-500 text-white rounded"
+                        className="btn w-56"
                         onClick={() => handleExtractTextAndSummarize(image)}
                       >
                         Click to summarize
@@ -138,7 +135,7 @@ const GetAllResources = () => {
               <p className="text-lg font-semibold mb-2"> {res.text}</p>
               {res.pdf && (
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="btn w-56 mt-5"
                   onClick={() => openPDF(res.pdf)}
                 >
                   View PDF
@@ -155,7 +152,7 @@ const GetAllResources = () => {
                       onClick={() => openImageInNewWindow(image)}
                     />
                     <button
-                      className="mt-2 p-2 bg-blue-500 text-white rounded"
+                      className="btn w-56 mt-5"
                       onClick={() => handleExtractTextAndSummarize(image)}
                     >
                       Click to summarize
