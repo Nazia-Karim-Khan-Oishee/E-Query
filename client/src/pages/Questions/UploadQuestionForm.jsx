@@ -56,7 +56,9 @@ const UploadQuestionForm = () => {
       <div>
         <h1 className="text-2xl font-bold mb-4">Ask a question</h1>
         <Textarea
+          color={"gray-600"}
           value={text}
+          placeholder="Ask question here..."
           onChange={(e) => setText(e.target.value)}
           required
         />
@@ -64,6 +66,7 @@ const UploadQuestionForm = () => {
       <div className="qattcontainer">
         <div className="topic-box">
           <TextInput
+            color={"indigo-400"}
             type="text"
             value={topic}
             placeholder="Enter topic"
@@ -72,7 +75,7 @@ const UploadQuestionForm = () => {
           />
         </div>
         <div>
-          <Label>Images:</Label>
+          <Label className="mr-2">Chosse Images:</Label>
           <input
             className="file-input"
             type="file"
@@ -92,9 +95,12 @@ const UploadQuestionForm = () => {
             ))}
           </div>
         </div>
-        <Button color="blue" type="submit" disabled={uploading || loading}>
+        <button
+          className="btn w-50"
+          type="submit"
+          disabled={uploading || loading}>
           {uploading || loading ? "Uploading..." : "Upload Question"}
-        </Button>
+        </button>
       </div>
       {error && <p>Error: {error}</p>}
       {response && <p>Question uploaded successfully!</p>}

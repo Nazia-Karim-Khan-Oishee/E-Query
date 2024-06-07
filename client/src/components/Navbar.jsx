@@ -1,4 +1,4 @@
-import { Navbar } from "flowbite-react"; // Assuming Container is imported for layout control
+import { Dropdown, Navbar } from "flowbite-react"; // Assuming Container is imported for layout control
 import { useState } from "react";
 import { useLogout } from "../hooks/Auth/useLogout";
 
@@ -24,53 +24,56 @@ export default function Component() {
             <h1 className="navbar-brand text-white ml-6">E-Query</h1>
           </Navbar.Brand>
         </div>
-        <div>
-          <Navbar.Collapse>
-            {user ? (
-              <ul className="flex flex-row">
-                <li>
-                  <Navbar.Link href="/" className="text-white ml-6">
-                    Products
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/profile">
-                    Profile
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/addProduct">
-                    Sell
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link className="ml-4 text-white" href="/messages">
-                    Messages
-                  </Navbar.Link>
-                </li>
-              </ul>
-            ) : (
-              <ul className="flex flex-row">
-                <li>
-                  <Navbar.Link href="/signup" className="text-white ml-6">
-                    Signup
-                  </Navbar.Link>
-                </li>
-                <li>
-                  <Navbar.Link href="/login" className="text-white ml-6">
-                    Login
-                  </Navbar.Link>
-                </li>
-              </ul>
-            )}
-          </Navbar.Collapse>
-        </div>
         {user && (
-          <div>
+          <div className="flex justify-between">
+            <ul className="flex flex-row">
+              <li>
+                <Navbar.Link className="ml-4 text-white" href="/profile">
+                  Profile
+                </Navbar.Link>
+              </li>
+              <li>
+                <Navbar.Link href="/getAllQuestion" className="text-white ml-6">
+                  Questions
+                </Navbar.Link>
+              </li>
+
+              <li>
+                <Navbar.Link
+                  className="ml-4 mr-4 text-white"
+                  href="/getAllResources">
+                  Resources
+                </Navbar.Link>
+              </li>
+              <li>
+                {/* <Dropdown
+                  label="Profile"
+                  inline={true}
+                  className="text-white flex">
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile">Profile</Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getQuestions">
+                      My Questions
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getResources">
+                      My Resouces
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item className="py-1 px-2">
+                    <Navbar.Link href="/profile/getBookmark">
+                      My BookMarks
+                    </Navbar.Link>
+                  </Dropdown.Item>
+                </Dropdown> */}
+              </li>
+            </ul>
             <button
               className="bg-red-600 text-white px-4 py-2 ml-6  rounded-md"
-              onClick={handleLogout}
-            >
+              onClick={handleLogout}>
               Logout
             </button>
           </div>

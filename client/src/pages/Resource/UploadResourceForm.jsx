@@ -63,7 +63,9 @@ const ResourceForm = () => {
     <div>
       <h1 className="text-2xl font-bold mb-4">Share a resource</h1>
       <form onSubmit={handleSubmit}>
-        <Textarea
+        <textarea
+          className="border border-gray-300 p-2 mb-4 w-full"
+          placeholder="Enter text here..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           required
@@ -73,7 +75,7 @@ const ResourceForm = () => {
             <input type="file" accept=".pdf" onChange={handleFileChange} />
           </div>
           <div>
-            <label>Images:</label>
+            <label className="mr-2">Images:</label>
             <input type="file" onChange={handleImageChange} multiple />
             <div>
               {previewImages.map((image, index) => (
@@ -86,9 +88,9 @@ const ResourceForm = () => {
               ))}
             </div>
           </div>
-          <Button color="blue" type="submit" disabled={loading}>
+          <button className="btn" type="submit" disabled={loading}>
             Submit
-          </Button>
+          </button>
         </div>
         {error && <p>Error: {error}</p>}
       </form>
